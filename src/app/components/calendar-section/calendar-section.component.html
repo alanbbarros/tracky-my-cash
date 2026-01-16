@@ -1,7 +1,7 @@
 <section class="calendar">
   <header class="calendar-header">
-    <h2>Calendário de projeção</h2>
-    <p>Passe o mouse sobre um dia para ver detalhes do saldo estimado.</p>
+    <h2>Linha do tempo financeira</h2>
+    <p>Navegue por meses para acompanhar o saldo projetado e acessar o orçamento mensal.</p>
   </header>
 
   <div class="month-grid">
@@ -9,6 +9,8 @@
       *ngFor="let month of months"
       [month]="month"
       (dayHover)="dayHover.emit($event)"
+      (monthFocus)="monthFocus.emit($event)"
+      (openBudget)="openBudget.emit($event)"
     ></app-month-card>
   </div>
 </section>

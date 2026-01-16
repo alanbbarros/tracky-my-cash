@@ -21,5 +21,10 @@ export interface CalendarMonth {
   label: string;
   year: number;
   monthIndex: number;
+  startBalance: number;
+  endBalance: number;
+  incomeTotal: number;
+  expensesTotal: number;
+  budgetConfigured: boolean;
   cells: CalendarCell[];
 }
