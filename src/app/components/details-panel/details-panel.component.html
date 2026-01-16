@@ -1,0 +1,50 @@
+<aside class="details">
+  <div class="details-card">
+    <h2>{{ selectedDayTitle }}</h2>
+    <div class="details-balance">
+      <p>Saldo estimado</p>
+      <strong [class.negative]="selectedDay?.balance && selectedDay.balance < 0">
+        {{ selectedDay ? formatCurrency(selectedDay.balance) : '—' }}
+      </strong>
+    </div>
+    <div class="details-row">
+      <div>
+        <span class="label">Entradas</span>
+        <span class="value">
+          {{ selectedDay ? formatCurrency(selectedDay.income) : '—' }}
+        </span>
+      </div>
+      <div>
+        <span class="label">Saídas</span>
+        <span class="value negative">
+          {{ selectedDay ? formatCurrency(selectedDay.expenses) : '—' }}
+        </span>
+      </div>
+    </div>
+    <div class="transactions">
+      <h3>Lançamentos do dia</h3>
+      <p *ngIf="!selectedDay || selectedDay.transactions.length === 0" class="muted">
+        Nenhum lançamento registrado para este dia.
+      </p>
+      <ul *ngIf="selectedDay && selectedDay.transactions.length">
+        <li *ngFor="let transaction of selectedDay.transactions">
+          <div>
+            <p class="transaction-title">{{ transaction.title }}</p>
+            <span class="muted">{{ transaction.category }}</span>
+          </div>
+          <span [class.negative]="transaction.amount < 0">
+            {{ formatCurrency(transaction.amount) }}
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div class="insights">
+      <h3>Insights rápidos</h3>
+      <ul>
+        <li>Projeção considera lançamentos esporádicos e recorrentes.</li>
+        <li>Integração futura com app mobile e automações via atalho.</li>
+        <li>Orçamento por categoria em desenvolvimento.</li>
+      </ul>
+    </div>
+  </div>
+</aside>

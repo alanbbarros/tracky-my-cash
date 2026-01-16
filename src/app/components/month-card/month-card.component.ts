@@ -1,0 +1,16 @@
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CalendarDay, CalendarMonth } from '../../models/calendar.model';
+import { DayCellComponent } from '../day-cell/day-cell.component';
+
+@Component({
+  selector: 'app-month-card',
+  standalone: true,
+  imports: [CommonModule, DayCellComponent],
+  templateUrl: './month-card.component.html',
+  styleUrl: './month-card.component.scss'
+})
+export class MonthCardComponent {
+  @Input({ required: true }) month!: CalendarMonth;
+  @Output() dayHover = new EventEmitter<CalendarDay>();
+}

@@ -1,0 +1,21 @@
+<div
+  class="day"
+  [class.placeholder]="cell.isPlaceholder"
+  [class.today]="cell.day?.isToday"
+  (mouseenter)="cell.day ? dayHover.emit(cell.day) : null"
+>
+  <ng-container *ngIf="cell.day">
+    <span class="day-number">{{ cell.day.date.getDate() }}</span>
+    <div class="day-notifications" *ngIf="cell.day.incomeCount || cell.day.expenseCount">
+      <span class="notification income" *ngIf="cell.day.incomeCount">
+        +{{ cell.day.incomeCount }}
+      </span>
+      <span class="notification expense" *ngIf="cell.day.expenseCount">
+        +{{ cell.day.expenseCount }}
+      </span>
+    </div>
+    <span class="day-balance" [class.negative]="cell.day.balance < 0">
+      {{ formatCurrency(cell.day.balance) }}
+    </span>
+  </ng-container>
+</div>
