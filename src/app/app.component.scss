@@ -1,13 +1,13 @@
 :host {
-  color: #0f172a;
+  color: #e2e8f0;
   font-family: 'Inter', system-ui, sans-serif;
   display: block;
-  background: #f8fafc;
+  background: #0b1120;
   min-height: 100vh;
 }
 
 .app-shell {
-  max-width: 1240px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 32px 24px 48px;
 }
@@ -25,8 +25,8 @@
   }
 
   .subtitle {
-    max-width: 520px;
-    color: #475569;
+    max-width: 560px;
+    color: #94a3b8;
     line-height: 1.5;
   }
 
@@ -41,7 +41,7 @@
   letter-spacing: 0.24em;
   font-size: 12px;
   font-weight: 600;
-  color: #64748b;
+  color: #94a3b8;
 }
 
 button {
@@ -50,18 +50,23 @@ button {
   padding: 10px 18px;
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
 }
 
 button.primary {
-  background: #6366f1;
+  background: #4f46e5;
   color: #ffffff;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.35);
 }
 
 button.ghost {
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid #1f2937;
 }
 
 .summary {
@@ -72,14 +77,14 @@ button.ghost {
 }
 
 .summary-card {
-  background: #ffffff;
+  background: #111827;
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.45);
 
   h3 {
     font-size: 14px;
-    color: #64748b;
+    color: #94a3b8;
     margin-bottom: 12px;
   }
 }
@@ -91,13 +96,13 @@ button.ghost {
 }
 
 .summary-meta {
-  color: #94a3b8;
+  color: #64748b;
   font-size: 13px;
   margin: 0;
 }
 
 .negative {
-  color: #ef4444;
+  color: #f87171;
 }
 
 .content {
@@ -108,10 +113,10 @@ button.ghost {
 }
 
 .calendar {
-  background: #ffffff;
+  background: #111827;
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 32px rgba(2, 6, 23, 0.45);
 }
 
 .calendar-header {
@@ -123,20 +128,21 @@ button.ghost {
 
   p {
     margin: 0;
-    color: #64748b;
+    color: #94a3b8;
   }
 }
 
 .month-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
 }
 
 .month {
-  background: #f8fafc;
+  background: #0f172a;
   border-radius: 16px;
   padding: 12px;
+  border: 1px solid #1f2937;
 }
 
 .month-title {
@@ -151,7 +157,7 @@ button.ghost {
   grid-template-columns: repeat(7, 1fr);
   font-size: 11px;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: #64748b;
   margin-bottom: 6px;
   gap: 4px;
 }
@@ -163,25 +169,27 @@ button.ghost {
 }
 
 .day {
-  background: #ffffff;
+  background: #111827;
   border-radius: 10px;
   padding: 6px;
-  min-height: 52px;
+  min-height: 64px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 4px;
   font-size: 11px;
-  border: 1px solid transparent;
+  border: 1px solid #0f172a;
   transition: all 0.2s ease;
+  overflow: hidden;
 
   &:hover {
-    border-color: #c7d2fe;
-    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.15);
+    border-color: #4338ca;
+    box-shadow: 0 10px 18px rgba(67, 56, 202, 0.3);
   }
 
   &.today {
-    border-color: #6366f1;
-    background: #eef2ff;
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.18);
   }
 
   &.placeholder {
@@ -196,9 +204,32 @@ button.ghost {
   font-size: 12px;
 }
 
+.day-notifications {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.notification {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: #0b1120;
+  background: #38bdf8;
+
+  &.income {
+    background: #34d399;
+  }
+
+  &.expense {
+    background: #f87171;
+  }
+}
+
 .day-balance {
   font-size: 10px;
-  color: #1e293b;
+  color: #e2e8f0;
 }
 
 .details {
@@ -207,10 +238,10 @@ button.ghost {
 }
 
 .details-card {
-  background: #ffffff;
+  background: #111827;
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16px 32px rgba(2, 6, 23, 0.45);
 
   h2 {
     margin-top: 0;
@@ -221,10 +252,11 @@ button.ghost {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f8fafc;
+  background: #0f172a;
   padding: 16px;
   border-radius: 16px;
   margin-bottom: 20px;
+  border: 1px solid #1f2937;
 
   strong {
     font-size: 20px;
@@ -232,7 +264,7 @@ button.ghost {
 
   p {
     margin: 0;
-    color: #64748b;
+    color: #94a3b8;
   }
 }
 
@@ -265,7 +297,7 @@ button.ghost {
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #1f2937;
 }
 
 .transactions li:last-child {
@@ -285,7 +317,84 @@ button.ghost {
 .insights ul {
   margin: 12px 0 0;
   padding-left: 18px;
-  color: #475569;
+  color: #cbd5f5;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 10;
+}
+
+.modal {
+  width: min(520px, 100%);
+  background: #111827;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.6);
+  border: 1px solid #1f2937;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+
+  h2 {
+    margin: 0 0 4px;
+  }
+}
+
+.icon-button {
+  background: transparent;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  color: #e2e8f0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.modal-form {
+  margin-top: 16px;
+  display: grid;
+  gap: 14px;
+
+  label {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    color: #cbd5f5;
+  }
+
+  input,
+  select {
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 @media (max-width: 1024px) {

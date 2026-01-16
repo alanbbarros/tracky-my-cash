@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 
 interface Transaction {
@@ -15,6 +16,8 @@ interface CalendarDay {
   expenses: number;
   balance: number;
   transactions: Transaction[];
+  incomeCount: number;
+  expenseCount: number;
   isToday: boolean;
 }
 
@@ -33,7 +36,7 @@ interface CalendarMonth {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -84,6 +87,13 @@ export class AppComponent {
 
   readonly months = this.buildCalendarMonths(20);
   selectedDay = this.months[0]?.cells.find((cell) => cell.day)?.day ?? null;
+  isModalOpen = false;
+  newEntry = {
+    amount: '',
+    type: 'entrada',
+    date: this.formatIsoDate(new Date()),
+    recurrence: 'mensal'
+  };
 
   get selectedDayTitle(): string {
     if (!this.selectedDay) {
@@ -104,6 +114,14 @@ export class AppComponent {
 
   onHoverDay(day: CalendarDay): void {
     this.selectedDay = day;
+  }
+
+  openModal(): void {
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
   }
 
   private buildCalendarMonths(totalMonths: number): CalendarMonth[] {
@@ -132,6 +150,8 @@ export class AppComponent {
         const date = new Date(year, monthIndex, day);
         const isoDate = this.formatIsoDate(date);
         const dayTransactions = dailyTotals.get(isoDate) ?? [];
+        const incomeCount = dayTransactions.filter((t) => t.amount > 0).length;
+        const expenseCount = dayTransactions.filter((t) => t.amount < 0).length;
         const income = dayTransactions.filter((t) => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
         const expenses = dayTransactions.filter((t) => t.amount < 0).reduce((sum, t) => sum + t.amount, 0);
         runningBalance += income + expenses;
@@ -145,6 +165,8 @@ export class AppComponent {
             expenses,
             balance: runningBalance,
             transactions: dayTransactions,
+            incomeCount,
+            expenseCount,
             isToday: date.getTime() === today.getTime()
           }
         });
