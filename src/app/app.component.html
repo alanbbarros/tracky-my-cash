@@ -9,7 +9,7 @@
     </div>
     <div class="actions">
       <button class="ghost">Configurar categorias</button>
-      <button class="primary">Novo lançamento</button>
+      <button class="primary" (click)="openModal()">Novo lançamento</button>
     </div>
   </header>
 
@@ -65,6 +65,14 @@
               >
                 <ng-container *ngIf="cell.day">
                   <span class="day-number">{{ cell.day.date.getDate() }}</span>
+                  <div class="day-notifications" *ngIf="cell.day.incomeCount || cell.day.expenseCount">
+                    <span class="notification income" *ngIf="cell.day.incomeCount">
+                      +{{ cell.day.incomeCount }}
+                    </span>
+                    <span class="notification expense" *ngIf="cell.day.expenseCount">
+                      +{{ cell.day.expenseCount }}
+                    </span>
+                  </div>
                   <span class="day-balance" [class.negative]="cell.day.balance < 0">
                     {{ formatCurrency(cell.day.balance) }}
                   </span>
@@ -127,4 +135,51 @@
       </div>
     </aside>
   </main>
+
+  <div class="modal-backdrop" *ngIf="isModalOpen">
+    <div class="modal">
+      <header class="modal-header">
+        <div>
+          <h2>Novo lançamento</h2>
+          <p class="muted">Registre entradas, saídas e recorrências.</p>
+        </div>
+        <button class="icon-button" type="button" (click)="closeModal()">×</button>
+      </header>
+
+      <form class="modal-form">
+        <label>
+          Valor do lançamento
+          <input type="number" placeholder="R$ 0,00" [(ngModel)]="newEntry.amount" name="amount" />
+        </label>
+
+        <label>
+          Tipo de lançamento
+          <select [(ngModel)]="newEntry.type" name="type">
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+          </select>
+        </label>
+
+        <label>
+          Data do lançamento
+          <input type="date" [(ngModel)]="newEntry.date" name="date" />
+        </label>
+
+        <label>
+          Recorrência
+          <select [(ngModel)]="newEntry.recurrence" name="recurrence">
+            <option value="mensal">Mensal</option>
+            <option value="quinzenal">Quinzenal</option>
+            <option value="semanal">Semanal</option>
+            <option value="trimestral">Trimestral</option>
+          </select>
+        </label>
+
+        <div class="modal-actions">
+          <button class="ghost" type="button" (click)="closeModal()">Cancelar</button>
+          <button class="primary" type="button">Salvar lançamento</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
