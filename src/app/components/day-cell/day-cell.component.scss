@@ -1,5 +1,5 @@
 .day {
-  background: #111827;
+  background: #f8fafc;
   border-radius: 12px;
   padding: 8px;
   min-height: 78px;
@@ -8,24 +8,31 @@
   justify-content: space-between;
   gap: 6px;
   font-size: 11px;
-  border: 1px solid #0f172a;
+  border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
   overflow: hidden;
+  cursor: pointer;
 
   &:hover {
-    border-color: #4338ca;
-    box-shadow: 0 10px 18px rgba(67, 56, 202, 0.3);
+    border-color: #6366f1;
+    box-shadow: 0 10px 18px rgba(99, 102, 241, 0.2);
   }
 
   &.today {
     border-color: #4f46e5;
-    background: rgba(79, 70, 229, 0.18);
+    background: rgba(99, 102, 241, 0.12);
   }
 
   &.placeholder {
     background: transparent;
     border-color: transparent;
     pointer-events: none;
+  }
+
+  &.selected {
+    border-color: #4f46e5;
+    box-shadow: 0 12px 20px rgba(79, 70, 229, 0.25);
+    background: #eef2ff;
   }
 }
 
@@ -45,19 +52,19 @@
   font-weight: 600;
   padding: 2px 6px;
   border-radius: 999px;
-  color: #0b1120;
-  background: #38bdf8;
+  color: #1f2937;
+  background: #bae6fd;
 
   &.income {
-    background: #34d399;
+    background: #bbf7d0;
   }
 
   &.expense {
-    background: #f87171;
+    background: #fecaca;
   }
 }
 
 .day-balance {
   font-size: 10px;
-  color: #e2e8f0;
+  color: #475569;
 }

@@ -12,11 +12,23 @@ import { CurrencyFormatService } from '../../services/currency-format.service';
 })
 export class DayCellComponent {
   @Input({ required: true }) cell!: CalendarCell;
-  @Output() dayHover = new EventEmitter<CalendarDay>();
+  @Input() selectedDay: CalendarDay | null = null;
+  @Output() daySelect = new EventEmitter<CalendarDay>();
 
   constructor(private readonly currencyFormat: CurrencyFormatService) {}
 
   formatCurrency(value: number): string {
     return this.currencyFormat.format(value);
+  }
+
+  isSelected(day: CalendarDay | undefined): boolean {
+    return !!day && this.selectedDay?.isoDate === day.isoDate;
+  }
+
+  onSelect(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.cell.day) {
+      this.daySelect.emit(this.cell.day);
+    }
   }
 }

@@ -12,12 +12,62 @@
   </header>
 
   <div class="budget-grid">
+    <article class="budget-overview">
+      <header>
+        <p class="eyebrow">Resumo do mês</p>
+        <h3>Distribuição geral do orçamento</h3>
+      </header>
+      <div class="overview-values">
+        <div>
+          <span class="label">Planejado</span>
+          <strong>{{ formatCurrency(totalPlanned()) }}</strong>
+        </div>
+        <div>
+          <span class="label">Comprometido</span>
+          <strong>{{ formatCurrency(totalCommitted()) }}</strong>
+        </div>
+        <div>
+          <span class="label">Disponível</span>
+          <strong [class.negative]="totalRemaining() < 0">
+            {{ formatCurrency(totalRemaining()) }}
+          </strong>
+        </div>
+      </div>
+      <div class="overview-progress">
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            [style.width.%]="totalPlanned() ? (totalCommitted() / totalPlanned()) * 100 : 0"
+          ></div>
+        </div>
+        <div class="progress-meta">
+          <span>
+            {{ (totalPlanned() ? (totalCommitted() / totalPlanned()) * 100 : 0) | number: '1.0-0' }}% usado
+          </span>
+          <span>
+            {{ (totalPlanned() ? (totalRemaining() / totalPlanned()) * 100 : 0) | number: '1.0-0' }}% livre
+          </span>
+        </div>
+      </div>
+    </article>
     <article class="budget-card" *ngFor="let category of categories">
       <div class="card-header">
         <h3>{{ category.name }}</h3>
         <span class="muted">Planejado</span>
       </div>
       <p class="planned">{{ formatCurrency(category.planned) }}</p>
+      <div class="budget-progress" [class.over]="isOverBudget(category)">
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            [style.width.%]="usagePercent(category)"
+          ></div>
+        </div>
+        <div class="progress-meta">
+          <span>{{ usagePercent(category) | number: '1.0-0' }}% consumido</span>
+          <span>{{ remainingPercent(category) | number: '1.0-0' }}% disponível</span>
+        </div>
+      </div>
       <div class="budget-row">
         <span class="label">Comprometido</span>
         <span>{{ formatCurrency(category.committed) }}</span>

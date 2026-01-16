@@ -12,13 +12,29 @@
 
   .subtitle {
     max-width: 560px;
-    color: #94a3b8;
+    color: #64748b;
     line-height: 1.5;
   }
 
   .actions {
     display: flex;
     gap: 12px;
+  }
+
+  .top-bar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+
+    span {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4338ca;
+      border: 1px solid #e0e7ff;
+    }
   }
 }
 

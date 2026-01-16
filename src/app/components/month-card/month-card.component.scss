@@ -1,9 +1,9 @@
 .month {
-  background: #0f172a;
+  background: #ffffff;
   border-radius: 16px;
   padding: 14px;
-  border: 1px solid #1f2937;
-  min-width: 0;
+  border: 1px solid #e2e8f0;
+  min-width: min(480px, 100%);
   display: grid;
   gap: 10px;
 }
@@ -22,13 +22,13 @@
 }
 
 .muted {
-  color: #94a3b8;
+  color: #64748b;
   font-size: 12px;
 }
 
 .month-status {
-  background: rgba(30, 64, 175, 0.3);
-  color: #93c5fd;
+  background: rgba(99, 102, 241, 0.16);
+  color: #4338ca;
   border-radius: 999px;
   padding: 4px 10px;
   font-size: 11px;
@@ -38,14 +38,14 @@
 }
 
 .month-status.configured {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.16);
+  color: #047857;
 }
 
 .month-cta {
   background: transparent;
-  border: 1px solid #1f2937;
-  color: #e2e8f0;
+  border: 1px solid #e2e8f0;
+  color: #1f2937;
   border-radius: 10px;
   padding: 8px 12px;
   font-size: 12px;
@@ -54,8 +54,8 @@
 }
 
 .month-cta:hover {
-  border-color: #38bdf8;
-  color: #38bdf8;
+  border-color: #6366f1;
+  color: #4338ca;
 }
 
 .weekday-row {

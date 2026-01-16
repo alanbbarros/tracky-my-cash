@@ -1,14 +1,22 @@
 <section class="calendar">
   <header class="calendar-header">
-    <h2>Linha do tempo financeira</h2>
-    <p>Navegue por meses para acompanhar o saldo projetado e acessar o orçamento mensal.</p>
+    <div>
+      <p class="eyebrow">Calendário financeiro</p>
+      <h2>Meses organizados para decisões rápidas</h2>
+      <p>Selecione um mês ou clique em um dia para abrir o resumo detalhado.</p>
+    </div>
+    <div class="calendar-highlight">
+      <span>Resumo instantâneo por clique</span>
+      <strong>Selecione um dia específico</strong>
+    </div>
   </header>
 
   <div class="month-grid">
     <app-month-card
       *ngFor="let month of months"
       [month]="month"
-      (dayHover)="dayHover.emit($event)"
+      [selectedDay]="selectedDay"
+      (daySelect)="daySelect.emit($event)"
       (monthFocus)="monthFocus.emit($event)"
       (openBudget)="openBudget.emit($event)"
     ></app-month-card>
