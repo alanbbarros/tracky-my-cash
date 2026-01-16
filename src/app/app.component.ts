@@ -1,13 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CalendarDay, CalendarMonth } from './models/calendar.model';
+import { BudgetCategory } from './models/budget.model';
 import { NewTransaction, Transaction } from './models/transaction.model';
 import { CalendarSectionComponent } from './components/calendar-section/calendar-section.component';
 import { DetailsPanelComponent } from './components/details-panel/details-panel.component';
 import { EntryModalComponent } from './components/entry-modal/entry-modal.component';
-import { SummaryCard, SummarySectionComponent } from './components/summary-section/summary-section.component';
+import { MonthSummaryComponent } from './components/month-summary/month-summary.component';
+import { MonthlyBudgetComponent } from './components/monthly-budget/monthly-budget.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
-import { CurrencyFormatService } from './services/currency-format.service';
 import { TransactionStoreService } from './services/transaction-store.service';
 import { buildCalendarMonths } from './utils/calendar.utils';
 
@@ -15,11 +17,13 @@ import { buildCalendarMonths } from './utils/calendar.utils';
   selector: 'app-root',
   standalone: true,
   imports: [
+    CommonModule,
     TopBarComponent,
-    SummarySectionComponent,
+    MonthSummaryComponent,
     CalendarSectionComponent,
     DetailsPanelComponent,
-    EntryModalComponent
+    EntryModalComponent,
+    MonthlyBudgetComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -29,13 +33,12 @@ export class AppComponent {
 
   months: CalendarMonth[] = [];
   selectedDay: CalendarDay | null = null;
+  focusedMonth: CalendarMonth | null = null;
+  activeBudgetMonth: CalendarMonth | null = null;
+  budgetCategories: BudgetCategory[] = [];
   isModalOpen = false;
-  summaryCards: SummaryCard[] = [];
 
-  constructor(
-    private readonly transactionStore: TransactionStoreService,
-    private readonly currencyFormat: CurrencyFormatService
-  ) {
+  constructor(private readonly transactionStore: TransactionStoreService) {
     this.syncFromTransactions(this.transactionStore.getSnapshot());
 
     this.transactionStore.transactions$
@@ -53,6 +56,21 @@ export class AppComponent {
 
   onHoverDay(day: CalendarDay): void {
     this.selectedDay = day;
+    this.focusedMonth = this.findMonthForDay(day, this.months);
+  }
+
+  onFocusMonth(month: CalendarMonth): void {
+    this.focusedMonth = month;
+    this.selectedDay = null;
+  }
+
+  openBudget(month: CalendarMonth): void {
+    this.activeBudgetMonth = month;
+    this.budgetCategories = this.buildBudgetCategories(month);
+  }
+
+  closeBudget(): void {
+    this.activeBudgetMonth = null;
   }
 
   onSaveEntry(entry: NewTransaction): void {
@@ -63,36 +81,21 @@ export class AppComponent {
   private syncFromTransactions(transactions: Transaction[]): void {
     this.months = buildCalendarMonths(20, transactions);
     this.selectedDay = this.resolveSelectedDay(this.selectedDay, this.months);
-    this.summaryCards = this.buildSummary(transactions);
-  }
-
-  private buildSummary(transactions: Transaction[]): SummaryCard[] {
-    const incomeTotal = transactions.filter((t) => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
-    const expensesTotal = transactions.filter((t) => t.amount < 0).reduce((sum, t) => sum + t.amount, 0);
-    const projectedBalance = this.selectedDay ? this.selectedDay.balance : 0;
-
-    return [
-      {
-        title: 'Saldo projetado hoje',
-        value: this.selectedDay ? this.currencyFormat.format(projectedBalance) : '—',
-        meta: 'Baseado nos lançamentos cadastrados.'
-      },
-      {
-        title: 'Total de entradas',
-        value: this.currencyFormat.format(incomeTotal),
-        meta: 'Entradas pontuais e recorrentes registradas.'
-      },
-      {
-        title: 'Total de saídas',
-        value: this.currencyFormat.format(expensesTotal),
-        meta: 'Pagamentos e gastos já cadastrados.',
-        tone: 'negative'
+    this.focusedMonth = this.resolveFocusedMonth(this.focusedMonth, this.months, this.selectedDay);
+    if (this.activeBudgetMonth) {
+      this.activeBudgetMonth = this.resolveActiveBudgetMonth(this.activeBudgetMonth, this.months);
+      if (this.activeBudgetMonth) {
+        this.budgetCategories = this.buildBudgetCategories(this.activeBudgetMonth);
       }
-    ];
+    }
   }
 
   private resolveSelectedDay(current: CalendarDay | null, months: CalendarMonth[]): CalendarDay | null {
     if (!months.length) {
+      return null;
+    }
+
+    if (!current) {
       return null;
     }
 
@@ -107,13 +110,50 @@ export class AppComponent {
       }
     }
 
-    for (const month of months) {
-      const firstDay = month.cells.find((cell) => cell.day)?.day;
-      if (firstDay) {
-        return firstDay;
-      }
+    return null;
+  }
+
+  private resolveFocusedMonth(
+    current: CalendarMonth | null,
+    months: CalendarMonth[],
+    selectedDay: CalendarDay | null
+  ): CalendarMonth | null {
+    if (!months.length) {
+      return null;
     }
 
-    return null;
+    if (selectedDay) {
+      return this.findMonthForDay(selectedDay, months);
+    }
+
+    if (current) {
+      return months.find((month) => month.monthIndex === current.monthIndex && month.year === current.year) ?? months[0];
+    }
+
+    return months[0];
+  }
+
+  private resolveActiveBudgetMonth(current: CalendarMonth, months: CalendarMonth[]): CalendarMonth | null {
+    return months.find((month) => month.monthIndex === current.monthIndex && month.year === current.year) ?? null;
+  }
+
+  private findMonthForDay(day: CalendarDay, months: CalendarMonth[]): CalendarMonth | null {
+    return (
+      months.find((month) =>
+        month.cells.some((cell) => cell.day?.isoDate === day.isoDate)
+      ) ?? null
+    );
+  }
+
+  private buildBudgetCategories(month: CalendarMonth): BudgetCategory[] {
+    const variation = (month.monthIndex % 3) * 75;
+    return [
+      { name: 'Moradia', planned: 1850, committed: 1850 },
+      { name: 'Alimentação', planned: 900 + variation, committed: 420 + variation / 2 },
+      { name: 'Transporte', planned: 420, committed: 260 },
+      { name: 'Lazer', planned: 350 + variation, committed: 120 + variation / 3 },
+      { name: 'Educação', planned: 480, committed: 180 },
+      { name: 'Reservas', planned: 600, committed: 300 }
+    ];
   }
 }

@@ -1,0 +1,33 @@
+<section class="budget">
+  <header class="budget-header">
+    <div>
+      <p class="eyebrow">Orçamento mensal</p>
+      <h2>Orçamento de {{ month.label }} {{ month.year }}</h2>
+      <p class="subtitle">Categorias 100% customizáveis para decisões rápidas.</p>
+    </div>
+    <div class="actions">
+      <button class="ghost" type="button">Editar categorias</button>
+      <button class="primary" type="button" (click)="closeBudget.emit()">Voltar ao calendário</button>
+    </div>
+  </header>
+
+  <div class="budget-grid">
+    <article class="budget-card" *ngFor="let category of categories">
+      <div class="card-header">
+        <h3>{{ category.name }}</h3>
+        <span class="muted">Planejado</span>
+      </div>
+      <p class="planned">{{ formatCurrency(category.planned) }}</p>
+      <div class="budget-row">
+        <span class="label">Comprometido</span>
+        <span>{{ formatCurrency(category.committed) }}</span>
+      </div>
+      <div class="budget-row">
+        <span class="label">Disponível</span>
+        <span [class.negative]="remaining(category) < 0">
+          {{ formatCurrency(remaining(category)) }}
+        </span>
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { CalendarDay } from '../../models/calendar.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CalendarDay, CalendarMonth } from '../../models/calendar.model';
 import { CurrencyFormatService } from '../../services/currency-format.service';
 
 @Component({
@@ -12,12 +12,16 @@ import { CurrencyFormatService } from '../../services/currency-format.service';
 })
 export class DetailsPanelComponent {
   @Input() selectedDay: CalendarDay | null = null;
+  @Input() focusedMonth: CalendarMonth | null = null;
+  @Output() openBudget = new EventEmitter<CalendarMonth>();
 
   constructor(private readonly currencyFormat: CurrencyFormatService) {}
 
   get selectedDayTitle(): string {
     if (!this.selectedDay) {
-      return 'Selecione um dia no calendário';
+      return this.focusedMonth
+        ? `Resumo de ${this.focusedMonth.label} ${this.focusedMonth.year}`
+        : 'Selecione um mês no calendário';
     }
 
     return this.selectedDay.date.toLocaleDateString('pt-BR', {
@@ -26,6 +30,14 @@ export class DetailsPanelComponent {
       month: 'long',
       year: 'numeric'
     });
+  }
+
+  get budgetStatusLabel(): string {
+    if (!this.focusedMonth) {
+      return 'Orçamento não selecionado';
+    }
+
+    return this.focusedMonth.budgetConfigured ? 'Orçamento configurado' : 'Orçamento não configurado';
   }
 
   formatCurrency(value: number): string {

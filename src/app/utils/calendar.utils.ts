@@ -37,6 +37,9 @@ export const buildCalendarMonths = (totalMonths: number, transactions: Transacti
     const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
     const firstWeekday = monthDate.getDay();
     const leadingBlanks = (firstWeekday + 6) % 7;
+    const startBalance = runningBalance;
+    let incomeTotal = 0;
+    let expensesTotal = 0;
 
     const cells: CalendarCell[] = [];
     for (let i = 0; i < leadingBlanks; i += 1) {
@@ -51,6 +54,8 @@ export const buildCalendarMonths = (totalMonths: number, transactions: Transacti
       const expenseCount = dayTransactions.filter((t) => t.amount < 0).length;
       const income = dayTransactions.filter((t) => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
       const expenses = dayTransactions.filter((t) => t.amount < 0).reduce((sum, t) => sum + t.amount, 0);
+      incomeTotal += income;
+      expensesTotal += expenses;
       runningBalance += income + expenses;
 
       cells.push({
@@ -79,6 +84,11 @@ export const buildCalendarMonths = (totalMonths: number, transactions: Transacti
       label: `${label.charAt(0).toUpperCase()}${label.slice(1)}`,
       year,
       monthIndex,
+      startBalance,
+      endBalance: runningBalance,
+      incomeTotal,
+      expensesTotal,
+      budgetConfigured: incomeTotal !== 0 || expensesTotal !== 0,
       cells
     });
   }

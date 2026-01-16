@@ -1,13 +1,32 @@
 <div class="app-shell">
   <app-top-bar (openNewEntry)="openModal()"></app-top-bar>
 
-  <app-summary-section [summaryCards]="summaryCards"></app-summary-section>
+  <ng-container *ngIf="!activeBudgetMonth; else monthlyBudgetView">
+    <app-month-summary [month]="focusedMonth" (openBudget)="openBudget($event)"></app-month-summary>
 
-  <main class="content">
-    <app-calendar-section [months]="months" (dayHover)="onHoverDay($event)"></app-calendar-section>
+    <main class="content">
+      <app-calendar-section
+        [months]="months"
+        (dayHover)="onHoverDay($event)"
+        (monthFocus)="onFocusMonth($event)"
+        (openBudget)="openBudget($event)"
+      ></app-calendar-section>
 
-    <app-details-panel [selectedDay]="selectedDay"></app-details-panel>
-  </main>
+      <app-details-panel
+        [selectedDay]="selectedDay"
+        [focusedMonth]="focusedMonth"
+        (openBudget)="openBudget($event)"
+      ></app-details-panel>
+    </main>
+  </ng-container>
+
+  <ng-template #monthlyBudgetView>
+    <app-monthly-budget
+      [month]="activeBudgetMonth!"
+      [categories]="budgetCategories"
+      (closeBudget)="closeBudget()"
+    ></app-monthly-budget>
+  </ng-template>
 
   <app-entry-modal
     [isOpen]="isModalOpen"
