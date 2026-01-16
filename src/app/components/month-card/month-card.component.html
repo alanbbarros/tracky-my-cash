@@ -1,0 +1,22 @@
+<article class="month">
+  <div class="month-title">
+    <span>{{ month.label }}</span>
+    <span class="muted">{{ month.year }}</span>
+  </div>
+  <div class="weekday-row">
+    <span>Seg</span>
+    <span>Ter</span>
+    <span>Qua</span>
+    <span>Qui</span>
+    <span>Sex</span>
+    <span>Sáb</span>
+    <span>Dom</span>
+  </div>
+  <div class="days-grid">
+    <app-day-cell
+      *ngFor="let cell of month.cells"
+      [cell]="cell"
+      (dayHover)="dayHover.emit($event)"
+    ></app-day-cell>
+  </div>
+</article>

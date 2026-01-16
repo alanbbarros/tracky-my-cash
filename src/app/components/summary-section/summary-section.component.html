@@ -1,0 +1,9 @@
+<section class="summary">
+  <article class="summary-card" *ngFor="let card of summaryCards">
+    <h3>{{ card.title }}</h3>
+    <p class="summary-value" [class.negative]="card.tone === 'negative'">
+      {{ card.value }}
+    </p>
+    <p class="summary-meta">{{ card.meta }}</p>
+  </article>
+</section>

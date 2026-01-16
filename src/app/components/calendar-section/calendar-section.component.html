@@ -1,0 +1,14 @@
+<section class="calendar">
+  <header class="calendar-header">
+    <h2>Calendário de projeção</h2>
+    <p>Passe o mouse sobre um dia para ver detalhes do saldo estimado.</p>
+  </header>
+
+  <div class="month-grid">
+    <app-month-card
+      *ngFor="let month of months"
+      [month]="month"
+      (dayHover)="dayHover.emit($event)"
+    ></app-month-card>
+  </div>
+</section>

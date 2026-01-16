@@ -1,0 +1,63 @@
+.day {
+  background: #111827;
+  border-radius: 12px;
+  padding: 8px;
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 11px;
+  border: 1px solid #0f172a;
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    border-color: #4338ca;
+    box-shadow: 0 10px 18px rgba(67, 56, 202, 0.3);
+  }
+
+  &.today {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.18);
+  }
+
+  &.placeholder {
+    background: transparent;
+    border-color: transparent;
+    pointer-events: none;
+  }
+}
+
+.day-number {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.day-notifications {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.notification {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: #0b1120;
+  background: #38bdf8;
+
+  &.income {
+    background: #34d399;
+  }
+
+  &.expense {
+    background: #f87171;
+  }
+}
+
+.day-balance {
+  font-size: 10px;
+  color: #e2e8f0;
+}

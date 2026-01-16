@@ -1,0 +1,56 @@
+<div class="modal-backdrop" *ngIf="isOpen">
+  <div class="modal">
+    <header class="modal-header">
+      <div>
+        <h2>Novo lançamento</h2>
+        <p class="muted">Registre entradas, saídas e recorrências.</p>
+      </div>
+      <button class="icon-button" type="button" (click)="onClose()">×</button>
+    </header>
+
+    <form class="modal-form" (ngSubmit)="onSubmit()">
+      <label>
+        Título do lançamento
+        <input type="text" placeholder="Ex: Salário, Mercado" [(ngModel)]="form.title" name="title" />
+      </label>
+
+      <label>
+        Categoria
+        <input type="text" placeholder="Ex: Receitas, Mercado" [(ngModel)]="form.category" name="category" />
+      </label>
+
+      <label>
+        Valor do lançamento
+        <input type="number" placeholder="R$ 0,00" [(ngModel)]="form.amount" name="amount" />
+      </label>
+
+      <label>
+        Tipo de lançamento
+        <select [(ngModel)]="form.type" name="type">
+          <option value="entrada">Entrada</option>
+          <option value="saida">Saída</option>
+        </select>
+      </label>
+
+      <label>
+        Data do lançamento
+        <input type="date" [(ngModel)]="form.date" name="date" />
+      </label>
+
+      <label>
+        Recorrência
+        <select [(ngModel)]="form.recurrence" name="recurrence">
+          <option value="mensal">Mensal</option>
+          <option value="quinzenal">Quinzenal</option>
+          <option value="semanal">Semanal</option>
+          <option value="trimestral">Trimestral</option>
+        </select>
+      </label>
+
+      <div class="modal-actions">
+        <button class="ghost" type="button" (click)="onClose()">Cancelar</button>
+        <button class="primary" type="submit">Salvar lançamento</button>
+      </div>
+    </form>
+  </div>
+</div>
