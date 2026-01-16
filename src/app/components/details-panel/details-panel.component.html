@@ -3,7 +3,7 @@
     <h2>{{ selectedDayTitle }}</h2>
     <div class="details-balance">
       <p>Saldo estimado</p>
-      <strong [class.negative]="selectedDay?.balance && selectedDay.balance < 0">
+      <strong [class.negative]="selectedDay?.balance && selectedDay?.balance < 0">
         {{ selectedDay ? formatCurrency(selectedDay.balance) : '—' }}
       </strong>
     </div>
