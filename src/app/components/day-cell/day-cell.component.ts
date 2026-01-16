@@ -12,9 +12,17 @@ import { CurrencyFormatService } from '../../services/currency-format.service';
 })
 export class DayCellComponent {
   @Input({ required: true }) cell!: CalendarCell;
-  @Output() dayHover = new EventEmitter<CalendarDay>();
+  @Input() isSelected = false;
+  @Output() daySelect = new EventEmitter<CalendarDay>();
 
   constructor(private readonly currencyFormat: CurrencyFormatService) {}
+
+  onSelect(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.cell.day) {
+      this.daySelect.emit(this.cell.day);
+    }
+  }
 
   formatCurrency(value: number): string {
     return this.currencyFormat.format(value);

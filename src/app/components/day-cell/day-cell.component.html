@@ -2,7 +2,8 @@
   class="day"
   [class.placeholder]="cell.isPlaceholder"
   [class.today]="cell.day?.isToday"
-  (mouseenter)="cell.day ? dayHover.emit(cell.day) : null"
+  [class.selected]="isSelected"
+  (click)="onSelect($event)"
 >
   <ng-container *ngIf="cell.day">
     <span class="day-number">{{ cell.day.date.getDate() }}</span>

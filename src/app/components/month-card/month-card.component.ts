@@ -12,7 +12,8 @@ import { DayCellComponent } from '../day-cell/day-cell.component';
 })
 export class MonthCardComponent {
   @Input({ required: true }) month!: CalendarMonth;
-  @Output() dayHover = new EventEmitter<CalendarDay>();
+  @Input() selectedDay: CalendarDay | null = null;
+  @Output() daySelect = new EventEmitter<CalendarDay>();
   @Output() monthFocus = new EventEmitter<CalendarMonth>();
   @Output() openBudget = new EventEmitter<CalendarMonth>();
 }

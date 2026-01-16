@@ -54,7 +54,13 @@ export class AppComponent {
     this.isModalOpen = false;
   }
 
-  onHoverDay(day: CalendarDay): void {
+  onSelectDay(day: CalendarDay): void {
+    if (this.selectedDay?.isoDate === day.isoDate) {
+      this.selectedDay = null;
+      this.focusedMonth = this.findMonthForDay(day, this.months);
+      return;
+    }
+
     this.selectedDay = day;
     this.focusedMonth = this.findMonthForDay(day, this.months);
   }

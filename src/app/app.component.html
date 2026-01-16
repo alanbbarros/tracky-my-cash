@@ -1,5 +1,5 @@
 <div class="app-shell">
-  <app-top-bar (openNewEntry)="openModal()"></app-top-bar>
+  <app-top-bar [focusedMonth]="focusedMonth" (openNewEntry)="openModal()"></app-top-bar>
 
   <ng-container *ngIf="!activeBudgetMonth; else monthlyBudgetView">
     <app-month-summary [month]="focusedMonth" (openBudget)="openBudget($event)"></app-month-summary>
@@ -7,7 +7,8 @@
     <main class="content">
       <app-calendar-section
         [months]="months"
-        (dayHover)="onHoverDay($event)"
+        [selectedDay]="selectedDay"
+        (daySelect)="onSelectDay($event)"
         (monthFocus)="onFocusMonth($event)"
         (openBudget)="openBudget($event)"
       ></app-calendar-section>

@@ -1,10 +1,13 @@
 <header class="top-bar">
   <div>
     <p class="eyebrow">Tracky My Cash</p>
-    <h1>Linha do tempo financeira</h1>
-    <p class="subtitle">
-      Navegue por meses para decidir o orçamento e acompanhar o saldo projetado em cada período.
-    </p>
+    <h1>Painel financeiro</h1>
+    <div class="header-meta">
+      <span class="meta-pill" *ngIf="focusedMonth">
+        Mês em foco: {{ focusedMonth.label }} {{ focusedMonth.year }}
+      </span>
+      <span class="meta-text">Clique em um dia para alternar o resumo detalhado.</span>
+    </div>
   </div>
   <div class="actions">
     <button class="ghost" type="button">Configurar categorias</button>

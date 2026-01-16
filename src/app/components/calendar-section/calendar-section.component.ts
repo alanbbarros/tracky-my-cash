@@ -12,7 +12,8 @@ import { MonthCardComponent } from '../month-card/month-card.component';
 })
 export class CalendarSectionComponent {
   @Input({ required: true }) months: CalendarMonth[] = [];
-  @Output() dayHover = new EventEmitter<CalendarDay>();
+  @Input() selectedDay: CalendarDay | null = null;
+  @Output() daySelect = new EventEmitter<CalendarDay>();
   @Output() monthFocus = new EventEmitter<CalendarMonth>();
   @Output() openBudget = new EventEmitter<CalendarMonth>();
 }

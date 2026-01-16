@@ -24,7 +24,8 @@
     <app-day-cell
       *ngFor="let cell of month.cells"
       [cell]="cell"
-      (dayHover)="dayHover.emit($event)"
+      [isSelected]="cell.day?.isoDate === selectedDay?.isoDate"
+      (daySelect)="daySelect.emit($event)"
     ></app-day-cell>
   </div>
 </article>
