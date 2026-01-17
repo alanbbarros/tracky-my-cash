@@ -11,9 +11,7 @@ import { MonthCardComponent } from '../month-card/month-card.component';
   styleUrl: './calendar-section.component.scss'
 })
 export class CalendarSectionComponent {
-  @Input({ required: true }) months: CalendarMonth[] = [];
+  @Input({ required: true }) focusedMonth: CalendarMonth | null = null;
   @Input() selectedDay: CalendarDay | null = null;
   @Output() daySelect = new EventEmitter<CalendarDay>();
-  @Output() monthFocus = new EventEmitter<CalendarMonth>();
-  @Output() openBudget = new EventEmitter<CalendarMonth>();
 }

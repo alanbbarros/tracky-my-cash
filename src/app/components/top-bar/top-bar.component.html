@@ -1,16 +1,27 @@
 <header class="top-bar">
-  <div>
-    <p class="eyebrow">Tracky My Cash</p>
-    <h1>Painel financeiro</h1>
-    <div class="header-meta">
-      <span class="meta-pill" *ngIf="focusedMonth">
-        Mês em foco: {{ focusedMonth.label }} {{ focusedMonth.year }}
-      </span>
-      <span class="meta-text">Clique em um dia para alternar o resumo detalhado.</span>
-    </div>
+  <span class="brand">Track My Cash</span>
+
+  <div class="month-nav" *ngIf="focusedMonth">
+    <button
+      class="icon-button"
+      type="button"
+      aria-label="Mês anterior"
+      (click)="previousMonth.emit()"
+      [disabled]="!canGoPrevious"
+    >
+      ‹
+    </button>
+    <span class="month-label">{{ focusedMonth.label }} {{ focusedMonth.year }}</span>
+    <button
+      class="icon-button"
+      type="button"
+      aria-label="Próximo mês"
+      (click)="nextMonth.emit()"
+      [disabled]="!canGoNext"
+    >
+      ›
+    </button>
   </div>
-  <div class="actions">
-    <button class="ghost" type="button">Configurar categorias</button>
-    <button class="primary" type="button" (click)="openNewEntry.emit()">Novo lançamento</button>
-  </div>
+
+  <button class="primary" type="button" (click)="openNewEntry.emit()">Novo lançamento</button>
 </header>

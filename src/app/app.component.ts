@@ -7,7 +7,6 @@ import { NewTransaction, Transaction } from './models/transaction.model';
 import { CalendarSectionComponent } from './components/calendar-section/calendar-section.component';
 import { DetailsPanelComponent } from './components/details-panel/details-panel.component';
 import { EntryModalComponent } from './components/entry-modal/entry-modal.component';
-import { MonthSummaryComponent } from './components/month-summary/month-summary.component';
 import { MonthlyBudgetComponent } from './components/monthly-budget/monthly-budget.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { TransactionStoreService } from './services/transaction-store.service';
@@ -19,7 +18,6 @@ import { buildCalendarMonths } from './utils/calendar.utils';
   imports: [
     CommonModule,
     TopBarComponent,
-    MonthSummaryComponent,
     CalendarSectionComponent,
     DetailsPanelComponent,
     EntryModalComponent,
@@ -65,11 +63,6 @@ export class AppComponent {
     this.focusedMonth = this.findMonthForDay(day, this.months);
   }
 
-  onFocusMonth(month: CalendarMonth): void {
-    this.focusedMonth = month;
-    this.selectedDay = null;
-  }
-
   openBudget(month: CalendarMonth): void {
     this.activeBudgetMonth = month;
     this.budgetCategories = this.buildBudgetCategories(month);
@@ -82,6 +75,22 @@ export class AppComponent {
   onSaveEntry(entry: NewTransaction): void {
     this.transactionStore.addTransaction(entry);
     this.closeModal();
+  }
+
+  get canGoPrevious(): boolean {
+    return this.canShiftFocusedMonth(-1);
+  }
+
+  get canGoNext(): boolean {
+    return this.canShiftFocusedMonth(1);
+  }
+
+  goToPreviousMonth(): void {
+    this.shiftFocusedMonth(-1);
+  }
+
+  goToNextMonth(): void {
+    this.shiftFocusedMonth(1);
   }
 
   private syncFromTransactions(transactions: Transaction[]): void {
@@ -141,6 +150,46 @@ export class AppComponent {
 
   private resolveActiveBudgetMonth(current: CalendarMonth, months: CalendarMonth[]): CalendarMonth | null {
     return months.find((month) => month.monthIndex === current.monthIndex && month.year === current.year) ?? null;
+  }
+
+  private shiftFocusedMonth(delta: number): void {
+    if (!this.focusedMonth || !this.months.length) {
+      return;
+    }
+
+    const currentIndex = this.findFocusedMonthIndex();
+
+    if (currentIndex === -1) {
+      return;
+    }
+
+    const targetIndex = currentIndex + delta;
+    if (targetIndex < 0 || targetIndex >= this.months.length) {
+      return;
+    }
+
+    this.focusedMonth = this.months[targetIndex];
+    this.selectedDay = null;
+  }
+
+  private canShiftFocusedMonth(delta: number): boolean {
+    if (!this.focusedMonth || !this.months.length) {
+      return false;
+    }
+
+    const currentIndex = this.findFocusedMonthIndex();
+    if (currentIndex === -1) {
+      return false;
+    }
+
+    const targetIndex = currentIndex + delta;
+    return targetIndex >= 0 && targetIndex < this.months.length;
+  }
+
+  private findFocusedMonthIndex(): number {
+    return this.months.findIndex(
+      (month) => month.monthIndex === this.focusedMonth?.monthIndex && month.year === this.focusedMonth?.year
+    );
   }
 
   private findMonthForDay(day: CalendarDay, months: CalendarMonth[]): CalendarMonth | null {

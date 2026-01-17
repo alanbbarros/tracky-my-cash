@@ -21,6 +21,12 @@ button {
   &:hover {
     transform: translateY(-1px);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+  }
 }
 
 button.primary {
@@ -66,4 +72,8 @@ button.ghost {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
 }

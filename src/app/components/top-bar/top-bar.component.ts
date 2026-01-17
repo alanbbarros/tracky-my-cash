@@ -11,5 +11,9 @@ import { CalendarMonth } from '../../models/calendar.model';
 })
 export class TopBarComponent {
   @Input() focusedMonth: CalendarMonth | null = null;
+  @Input() canGoPrevious = false;
+  @Input() canGoNext = false;
   @Output() openNewEntry = new EventEmitter<void>();
+  @Output() previousMonth = new EventEmitter<void>();
+  @Output() nextMonth = new EventEmitter<void>();
 }

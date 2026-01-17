@@ -1,53 +1,7 @@
 .calendar {
   background: #ffffff;
   border-radius: 20px;
-  padding: 24px;
+  padding: 18px;
   box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
   border: 1px solid #e2e8f0;
-}
-
-.calendar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
-
-  h2 {
-    margin: 0 0 6px;
-  }
-
-  p {
-    margin: 0;
-    color: #64748b;
-  }
-}
-
-.calendar-hint {
-  background: #eef2ff;
-  color: #4338ca;
-  border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid #c7d2fe;
-}
-
-.month-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-  gap: 18px;
-}
-
-@media (max-width: 1200px) {
-  .month-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .calendar-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
