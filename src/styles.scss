@@ -2,11 +2,23 @@
   box-sizing: border-box;
 }
 
+:root {
+  --color-bg: #e7ecf4;
+  --color-surface: #f1f4fa;
+  --color-card: #ffffff;
+  --color-border: #d6dee9;
+  --color-muted: #64748b;
+  --color-text: #0f172a;
+  --color-primary: #4338ca;
+  --color-primary-soft: rgba(67, 56, 202, 0.12);
+  --color-danger: #dc2626;
+}
+
 body {
   margin: 0;
-  background: #f5f7fb;
+  background: var(--color-bg);
   font-family: 'Inter', system-ui, sans-serif;
-  color: #0f172a;
+  color: var(--color-text);
 }
 
 button {
@@ -30,16 +42,22 @@ button {
   }
 }
 
+input:disabled,
+select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 button.primary {
-  background: #4f46e5;
+  background: var(--color-primary);
   color: #ffffff;
-  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 10px 24px rgba(67, 56, 202, 0.25);
 }
 
 button.ghost {
-  background: #eef2ff;
+  background: var(--color-primary-soft);
   color: #1e1b4b;
-  border: 1px solid #c7d2fe;
+  border: 1px solid rgba(67, 56, 202, 0.2);
 }
 
 .eyebrow {
@@ -47,23 +65,23 @@ button.ghost {
   letter-spacing: 0.24em;
   font-size: 12px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-muted);
 }
 
 .negative {
-  color: #dc2626;
+  color: var(--color-danger);
 }
 
 .muted {
-  color: #64748b;
+  color: var(--color-muted);
   font-size: 12px;
 }
 
 .icon-button {
   background: transparent;
   border-radius: 999px;
-  border: 1px solid #cbd5f5;
-  color: #1e293b;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   width: 32px;
   height: 32px;
   padding: 0;

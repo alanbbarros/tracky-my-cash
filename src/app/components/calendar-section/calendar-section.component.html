@@ -1,7 +1,7 @@
 <section class="calendar">
   <app-month-card
-    *ngIf="focusedMonth"
-    [month]="focusedMonth"
+    *ngIf="focusedCycle"
+    [month]="focusedCycle"
     [selectedDay]="selectedDay"
     (daySelect)="daySelect.emit($event)"
   ></app-month-card>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CalendarMonth } from '../../models/calendar.model';
+import { Component, Input } from '@angular/core';
+import { BillingCycle } from '../../models/calendar.model';
 import { CurrencyFormatService } from '../../services/currency-format.service';
 
 @Component({
@@ -11,8 +11,7 @@ import { CurrencyFormatService } from '../../services/currency-format.service';
   styleUrl: './month-summary.component.scss'
 })
 export class MonthSummaryComponent {
-  @Input() month: CalendarMonth | null = null;
-  @Output() openBudget = new EventEmitter<CalendarMonth>();
+  @Input() month: BillingCycle | null = null;
 
   constructor(private readonly currencyFormat: CurrencyFormatService) {}
 

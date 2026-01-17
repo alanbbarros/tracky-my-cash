@@ -1,8 +1,8 @@
 .month {
-  background: #f8fafc;
+  background: var(--color-surface);
   border-radius: 16px;
   padding: 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   min-width: 0;
   display: grid;
   gap: 10px;
@@ -13,7 +13,7 @@
   grid-template-columns: repeat(7, minmax(0, 1fr));
   font-size: 11px;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--color-muted);
   margin-bottom: 6px;
   gap: 6px;
 }

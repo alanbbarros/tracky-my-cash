@@ -6,7 +6,7 @@
   (click)="onSelect($event)"
 >
   <ng-container *ngIf="cell.day">
-    <span class="day-number">{{ cell.day.date.getDate() }}</span>
+    <span class="day-number">{{ cell.day.date | date: 'dd/MM' }}</span>
     <div class="day-notifications" *ngIf="cell.day.incomeCount || cell.day.expenseCount">
       <span class="notification income" *ngIf="cell.day.incomeCount">
         +{{ cell.day.incomeCount }}

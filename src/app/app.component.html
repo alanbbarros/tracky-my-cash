@@ -1,40 +1,105 @@
 <div class="app-shell">
   <app-top-bar
-    [focusedMonth]="focusedMonth"
+    [focusedCycle]="focusedCycle"
     [canNavigatePrevious]="canNavigatePrevious"
     [canNavigateNext]="canNavigateNext"
-    (navigatePrevious)="onPreviousMonth()"
-    (navigateNext)="onNextMonth()"
-    (openNewEntry)="openModal()"
+    [activeView]="activeView"
+    [userName]="userName"
+    (navigatePrevious)="onPreviousCycle()"
+    (navigateNext)="onNextCycle()"
+    (openView)="openView($event)"
   ></app-top-bar>
 
-  <ng-container *ngIf="!activeBudgetMonth; else monthlyBudgetView">
-    <main class="content">
-      <app-calendar-section
-        [focusedMonth]="focusedMonth"
-        [selectedDay]="selectedDay"
-        (daySelect)="onSelectDay($event)"
-      ></app-calendar-section>
+  <ng-container [ngSwitch]="activeView">
+    <main class="content" *ngSwitchCase="'calendar'">
+      <section class="calendar-column">
+        <button
+          class="cycle-header"
+          type="button"
+          *ngIf="focusedCycle"
+          (click)="openInvoiceDetail(focusedCycle)"
+        >
+          <div>
+            <span class="eyebrow">Fatura • {{ focusedCycle.label }} {{ focusedCycle.year }}</span>
+            <h2>
+              {{ focusedCycle.cycleStart | date: 'dd MMM' }} →
+              {{ focusedCycle.cycleEnd | date: 'dd MMM' }}
+            </h2>
+            <p class="muted">
+              Vencimento {{ focusedCycle.dueDate | date: 'dd/MM' }}
+            </p>
+          </div>
+          <span class="ghost-link">Ver detalhe</span>
+        </button>
+        <app-calendar-section
+          [focusedCycle]="focusedCycle"
+          [selectedDay]="selectedDay"
+          (daySelect)="onSelectDay($event)"
+        ></app-calendar-section>
+      </section>
 
       <app-details-panel
         [selectedDay]="selectedDay"
-        [focusedMonth]="focusedMonth"
-        (openBudget)="openBudget($event)"
+        [focusedCycle]="focusedCycle"
+        (editTransaction)="onEditTransaction($event)"
+        (deleteTransaction)="onDeleteTransaction($event)"
+        (openTransactions)="openTransactions($event)"
+        (openNewEntry)="openModal()"
       ></app-details-panel>
     </main>
-  </ng-container>
 
-  <ng-template #monthlyBudgetView>
-    <app-monthly-budget
-      [month]="activeBudgetMonth!"
-      [categories]="budgetCategories"
-      (closeBudget)="closeBudget()"
-    ></app-monthly-budget>
-  </ng-template>
+    <app-card-management
+      *ngSwitchCase="'cards'"
+      [cardOverviews]="cardOverviews"
+      [activeCardId]="activeCard?.id ?? null"
+      (selectCard)="onSelectCard($event)"
+      (saveCard)="onSaveCard($event.card, $event.isEdit)"
+      (openInvoice)="openInvoiceDetail($event)"
+    ></app-card-management>
+
+    <app-transactions-list
+      *ngSwitchCase="'transactions'"
+      [transactions]="filteredTransactions"
+      [cards]="cards"
+      [filters]="transactionFilters"
+      (filtersChange)="transactionFilters = $event"
+      (editTransaction)="onEditTransaction($event)"
+      (deleteTransaction)="onDeleteTransaction($event)"
+    ></app-transactions-list>
+
+    <app-invoice-detail
+      *ngSwitchCase="'invoice'"
+      [cycle]="activeInvoiceCycle"
+      [card]="activeCard"
+      [transactions]="activeInvoiceTransactions"
+      [status]="invoiceStatus"
+      (markAsPaid)="onMarkInvoiceAsPaid($event)"
+      (openTransactions)="openTransactions($event)"
+      (editTransaction)="onEditTransaction($event)"
+      (deleteTransaction)="onDeleteTransaction($event)"
+    ></app-invoice-detail>
+  </ng-container>
 
   <app-entry-modal
     [isOpen]="isModalOpen"
+    [cards]="cards"
+    [activeCardId]="activeCard?.id ?? null"
+    [entryToEdit]="editingTransaction"
     (closeModal)="closeModal()"
     (saveEntry)="onSaveEntry($event)"
+    (updateEntry)="onUpdateEntry($event)"
   ></app-entry-modal>
+
+  <div class="recurrence-overlay" *ngIf="recurrenceEditTarget">
+    <div class="recurrence-card">
+      <h3>Editar recorrência</h3>
+      <p>Este lançamento faz parte de uma série recorrente.</p>
+      <div class="recurrence-actions">
+        <button class="ghost" type="button" (click)="onSelectRecurrenceEdit('single')">Só este</button>
+        <button class="ghost" type="button" (click)="onSelectRecurrenceEdit('next')">Este e próximos</button>
+        <button class="primary" type="button" (click)="onSelectRecurrenceEdit('all')">Toda a série</button>
+      </div>
+      <button class="link" type="button" (click)="onCancelRecurrenceEdit()">Cancelar</button>
+    </div>
+  </div>
 </div>

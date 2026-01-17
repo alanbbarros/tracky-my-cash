@@ -10,12 +10,12 @@
 }
 
 .modal {
-  width: min(520px, 100%);
-  background: #ffffff;
+  width: min(760px, 100%);
+  background: var(--color-card);
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
 }
 
 .modal-header {
@@ -32,24 +32,60 @@
 .modal-form {
   margin-top: 16px;
   display: grid;
+  gap: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 
   label {
     display: grid;
     gap: 6px;
     font-size: 13px;
-    color: #475569;
+    color: var(--color-muted);
   }
 
   input,
   select {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    color: #0f172a;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
     border-radius: 12px;
     padding: 10px 12px;
     font-size: 14px;
   }
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.installment-block {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.installment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .modal-actions {
@@ -57,4 +93,11 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 8px;
+}
+
+@media (max-width: 720px) {
+  .form-grid,
+  .installment-grid {
+    grid-template-columns: 1fr;
+  }
 }

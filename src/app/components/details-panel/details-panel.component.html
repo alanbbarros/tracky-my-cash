@@ -3,6 +3,7 @@
     <h2>{{ selectedDayTitle }}</h2>
 
     <ng-container *ngIf="selectedDay; else monthOverview">
+      <button class="primary full" type="button" (click)="openNewEntry.emit()">Novo lançamento</button>
       <div class="details-balance">
         <p>Saldo projetado no dia</p>
         <strong [class.negative]="selectedDay.balance < 0">
@@ -32,27 +33,33 @@
           <li *ngFor="let transaction of selectedDay.transactions">
             <div>
               <p class="transaction-title">{{ transaction.title }}</p>
-              <span class="muted">{{ transaction.category }}</span>
+              <span class="muted">
+                {{ transaction.category }} • {{ transaction.paymentMethod | uppercase }}
+                <ng-container *ngIf="transaction.recurrence !== 'nenhuma'"> • recorrente</ng-container>
+                <ng-container *ngIf="transaction.installment">
+                  • {{ transaction.installment.current }}/{{ transaction.installment.total }}
+                </ng-container>
+              </span>
             </div>
-            <span [class.negative]="transaction.amount < 0">
-              {{ formatCurrency(transaction.amount) }}
-            </span>
+            <div class="transaction-actions">
+              <span [class.negative]="transaction.amount < 0">
+                {{ formatCurrency(transaction.amount) }}
+              </span>
+              <button type="button" class="ghost" (click)="editTransaction.emit(transaction)">Editar</button>
+              <button type="button" class="ghost" (click)="deleteTransaction.emit(transaction)">Excluir</button>
+            </div>
           </li>
         </ul>
       </div>
-      <button
-        class="ghost full"
-        type="button"
-        *ngIf="focusedMonth"
-        (click)="openBudget.emit(focusedMonth)"
-      >
-        Ver orçamento de {{ focusedMonth.label }} {{ focusedMonth.year }}
+      <button class="ghost full" type="button" (click)="openTransactions.emit(toFiltersForCycle())">
+        Ver lançamentos do ciclo
       </button>
     </ng-container>
 
     <ng-template #monthOverview>
+      <button class="primary full" type="button" (click)="openNewEntry.emit()">Novo lançamento</button>
       <div class="details-balance">
-        <p>Saldo no início de {{ focusedMonth?.label }} {{ focusedMonth?.year }}</p>
+        <p>Saldo no início do ciclo</p>
         <strong [class.negative]="focusedMonth?.startBalance && focusedMonth.startBalance < 0">
           {{ focusedMonth ? formatCurrency(focusedMonth.startBalance) : '—' }}
         </strong>
@@ -65,33 +72,29 @@
           </span>
         </div>
         <div>
-          <span class="label">Status do orçamento</span>
-          <span class="value" [class.negative]="focusedMonth && !focusedMonth.budgetConfigured">
-            {{ budgetStatusLabel }}
+          <span class="label">Período da fatura</span>
+          <span class="value">
+            {{ focusedMonth?.cycleStart | date: 'dd/MM' }} →
+            {{ focusedMonth?.cycleEnd | date: 'dd/MM' }}
           </span>
         </div>
       </div>
       <div class="details-row">
         <div>
-          <span class="label">Entradas do mês</span>
+          <span class="label">Entradas do ciclo</span>
           <span class="value">
             {{ focusedMonth ? formatCurrency(focusedMonth.incomeTotal) : '—' }}
           </span>
         </div>
         <div>
-          <span class="label">Saídas do mês</span>
+          <span class="label">Saídas do ciclo</span>
           <span class="value negative">
             {{ focusedMonth ? formatCurrency(focusedMonth.expensesTotal) : '—' }}
           </span>
         </div>
       </div>
-      <button
-        class="ghost full"
-        type="button"
-        *ngIf="focusedMonth"
-        (click)="openBudget.emit(focusedMonth)"
-      >
-        Ver orçamento do mês
+      <button class="ghost full" type="button" (click)="openTransactions.emit(toFiltersForCycle())">
+        Ver lançamentos do ciclo
       </button>
     </ng-template>
   </div>
