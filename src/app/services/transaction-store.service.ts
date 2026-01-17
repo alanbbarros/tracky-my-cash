@@ -24,6 +24,34 @@ export class TransactionStoreService {
     this.saveToStorage(updated);
   }
 
+  updateTransaction(transactionId: string, updates: NewTransaction): void {
+    const updated = this.transactionsSubject.getValue().map((transaction) =>
+      transaction.id === transactionId ? { ...transaction, ...updates } : transaction
+    );
+    this.transactionsSubject.next(updated);
+    this.saveToStorage(updated);
+  }
+
+  updateTransactionsByFilter(filter: (transaction: Transaction) => boolean, updates: NewTransaction): void {
+    const updated = this.transactionsSubject.getValue().map((transaction) =>
+      filter(transaction) ? { ...transaction, ...updates } : transaction
+    );
+    this.transactionsSubject.next(updated);
+    this.saveToStorage(updated);
+  }
+
+  deleteTransaction(transactionId: string): void {
+    const updated = this.transactionsSubject.getValue().filter((transaction) => transaction.id !== transactionId);
+    this.transactionsSubject.next(updated);
+    this.saveToStorage(updated);
+  }
+
+  deleteTransactionsByFilter(filter: (transaction: Transaction) => boolean): void {
+    const updated = this.transactionsSubject.getValue().filter((transaction) => !filter(transaction));
+    this.transactionsSubject.next(updated);
+    this.saveToStorage(updated);
+  }
+
   private createId(): string {
     if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
       return crypto.randomUUID();
@@ -40,7 +68,16 @@ export class TransactionStoreService {
 
     try {
       const parsed = JSON.parse(raw) as Transaction[];
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+
+      return parsed.map((transaction) => ({
+        ...transaction,
+        recurrence: transaction.recurrence ?? 'nenhuma',
+        type: transaction.type ?? (transaction.amount < 0 ? 'saida' : 'entrada'),
+        paymentMethod: transaction.paymentMethod ?? 'debito'
+      }));
     } catch {
       return [];
     }

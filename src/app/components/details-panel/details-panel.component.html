@@ -2,7 +2,7 @@
   <div class="details-card">
     <h2>{{ selectedDayTitle }}</h2>
 
-    <ng-container *ngIf="selectedDay; else monthOverview">
+    <ng-container *ngIf="selectedDay; else cycleOverview">
       <div class="details-balance">
         <p>Saldo projetado no dia</p>
         <strong [class.negative]="selectedDay.balance < 0">
@@ -24,74 +24,71 @@
         </div>
       </div>
       <div class="transactions">
-        <h3>Eventos relevantes</h3>
+        <h3>Lançamentos do dia</h3>
         <p *ngIf="selectedDay.transactions.length === 0" class="muted">
-          Nenhum evento registrado para este dia.
+          Nenhum lançamento registrado para este dia.
         </p>
         <ul *ngIf="selectedDay.transactions.length">
           <li *ngFor="let transaction of selectedDay.transactions">
-            <div>
-              <p class="transaction-title">{{ transaction.title }}</p>
-              <span class="muted">{{ transaction.category }}</span>
+            <div class="transaction-main">
+              <div>
+                <p class="transaction-title">{{ transaction.title }}</p>
+                <span class="muted">
+                  {{ transaction.category }} • {{ transaction.paymentMethod | titlecase }}
+                  <ng-container *ngIf="transaction.recurrence !== 'nenhuma'">• Recorrente</ng-container>
+                  <ng-container *ngIf="formatInstallment(transaction)">• {{ formatInstallment(transaction) }}</ng-container>
+                </span>
+              </div>
+              <span [class.negative]="transaction.amount < 0">
+                {{ formatCurrency(transaction.amount) }}
+              </span>
             </div>
-            <span [class.negative]="transaction.amount < 0">
-              {{ formatCurrency(transaction.amount) }}
-            </span>
+            <div class="transaction-actions">
+              <button class="ghost" type="button" (click)="editTransaction.emit(transaction)">Editar</button>
+              <button class="ghost danger" type="button" (click)="deleteTransaction.emit(transaction)">Excluir</button>
+            </div>
           </li>
         </ul>
       </div>
-      <button
-        class="ghost full"
-        type="button"
-        *ngIf="focusedMonth"
-        (click)="openBudget.emit(focusedMonth)"
-      >
-        Ver orçamento de {{ focusedMonth.label }} {{ focusedMonth.year }}
-      </button>
     </ng-container>
 
-    <ng-template #monthOverview>
+    <ng-template #cycleOverview>
       <div class="details-balance">
-        <p>Saldo no início de {{ focusedMonth?.label }} {{ focusedMonth?.year }}</p>
-        <strong [class.negative]="focusedMonth?.startBalance && focusedMonth.startBalance < 0">
-          {{ focusedMonth ? formatCurrency(focusedMonth.startBalance) : '—' }}
+        <p>Saldo no início do ciclo</p>
+        <strong [class.negative]="focusedCycle?.startBalance && focusedCycle.startBalance < 0">
+          {{ focusedCycle ? formatCurrency(focusedCycle.startBalance) : '—' }}
         </strong>
       </div>
       <div class="details-row">
         <div>
-          <span class="label">Saldo final estimado</span>
-          <span class="value" [class.negative]="focusedMonth?.endBalance && focusedMonth.endBalance < 0">
-            {{ focusedMonth ? formatCurrency(focusedMonth.endBalance) : '—' }}
+          <span class="label">Status da fatura</span>
+          <span class="value">
+            {{ cycleStatusLabel }}
           </span>
         </div>
         <div>
-          <span class="label">Status do orçamento</span>
-          <span class="value" [class.negative]="focusedMonth && !focusedMonth.budgetConfigured">
-            {{ budgetStatusLabel }}
+          <span class="label">Total no crédito</span>
+          <span class="value negative">
+            {{ focusedCycle ? formatCurrency(focusedCycle.creditTotal) : '—' }}
           </span>
         </div>
       </div>
       <div class="details-row">
         <div>
-          <span class="label">Entradas do mês</span>
+          <span class="label">Entradas do ciclo</span>
           <span class="value">
-            {{ focusedMonth ? formatCurrency(focusedMonth.incomeTotal) : '—' }}
+            {{ focusedCycle ? formatCurrency(focusedCycle.incomeTotal) : '—' }}
           </span>
         </div>
         <div>
-          <span class="label">Saídas do mês</span>
+          <span class="label">Saídas do ciclo</span>
           <span class="value negative">
-            {{ focusedMonth ? formatCurrency(focusedMonth.expensesTotal) : '—' }}
+            {{ focusedCycle ? formatCurrency(focusedCycle.expensesTotal) : '—' }}
           </span>
         </div>
       </div>
-      <button
-        class="ghost full"
-        type="button"
-        *ngIf="focusedMonth"
-        (click)="openBudget.emit(focusedMonth)"
-      >
-        Ver orçamento do mês
+      <button class="ghost full" type="button" *ngIf="focusedCycle" (click)="viewCycleTransactions.emit()">
+        Ver lançamentos da fatura
       </button>
     </ng-template>
   </div>

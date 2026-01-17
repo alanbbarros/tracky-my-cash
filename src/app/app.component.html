@@ -1,40 +1,65 @@
 <div class="app-shell">
   <app-top-bar
-    [focusedMonth]="focusedMonth"
+    [focusedCycle]="focusedCycle"
     [canNavigatePrevious]="canNavigatePrevious"
     [canNavigateNext]="canNavigateNext"
-    (navigatePrevious)="onPreviousMonth()"
-    (navigateNext)="onNextMonth()"
+    [activeView]="activeView"
+    (navigatePrevious)="onPreviousCycle()"
+    (navigateNext)="onNextCycle()"
     (openNewEntry)="openModal()"
+    (viewChange)="onViewChange($event)"
   ></app-top-bar>
 
-  <ng-container *ngIf="!activeBudgetMonth; else monthlyBudgetView">
-    <main class="content">
-      <app-calendar-section
-        [focusedMonth]="focusedMonth"
-        [selectedDay]="selectedDay"
-        (daySelect)="onSelectDay($event)"
-      ></app-calendar-section>
+  <main class="content" *ngIf="activeView === 'calendar'">
+    <app-calendar-section
+      [focusedCycle]="focusedCycle"
+      [selectedDay]="selectedDay"
+      (daySelect)="onSelectDay($event)"
+      (openInvoice)="openInvoiceView()"
+    ></app-calendar-section>
 
-      <app-details-panel
-        [selectedDay]="selectedDay"
-        [focusedMonth]="focusedMonth"
-        (openBudget)="openBudget($event)"
-      ></app-details-panel>
-    </main>
-  </ng-container>
+    <app-details-panel
+      [selectedDay]="selectedDay"
+      [focusedCycle]="focusedCycle"
+      (editTransaction)="openModal($event)"
+      (deleteTransaction)="onDeleteTransaction($event)"
+      (viewCycleTransactions)="viewCycleTransactions()"
+    ></app-details-panel>
+  </main>
 
-  <ng-template #monthlyBudgetView>
-    <app-monthly-budget
-      [month]="activeBudgetMonth!"
-      [categories]="budgetCategories"
-      (closeBudget)="closeBudget()"
-    ></app-monthly-budget>
-  </ng-template>
+  <app-cards-section
+    *ngIf="activeView === 'cards'"
+    [cards]="cards"
+    [cycleSummaries]="cardSummaries"
+    (saveCard)="onSaveCard($event)"
+    (updateCard)="onUpdateCard($event)"
+    (viewCurrentInvoice)="viewCardInvoice($event)"
+  ></app-cards-section>
+
+  <app-transactions-section
+    *ngIf="activeView === 'transactions'"
+    [transactions]="transactions"
+    [cards]="cards"
+    [presetFilters]="transactionFilters"
+    (editTransaction)="openModal($event)"
+    (deleteTransaction)="onDeleteTransaction($event)"
+  ></app-transactions-section>
+
+  <app-invoice-detail
+    *ngIf="activeView === 'invoice'"
+    [card]="activeCard"
+    [cycle]="focusedCycle"
+    [transactions]="transactions"
+    (editTransaction)="openModal($event)"
+    (markAsPaid)="onMarkInvoicePaid()"
+  ></app-invoice-detail>
 
   <app-entry-modal
     [isOpen]="isModalOpen"
+    [cards]="cards"
+    [transactionToEdit]="editingTransaction"
     (closeModal)="closeModal()"
     (saveEntry)="onSaveEntry($event)"
+    (updateEntry)="onUpdateEntry($event)"
   ></app-entry-modal>
 </div>

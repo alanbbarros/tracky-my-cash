@@ -4,12 +4,34 @@
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .brand {
   font-weight: 700;
   font-size: 18px;
   letter-spacing: 0.01em;
+}
+
+.top-nav {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: #ffffff;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+}
+
+.top-nav .ghost {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.top-nav .ghost.active {
+  background: #0f172a;
+  color: #ffffff;
 }
 
 .month-nav {
@@ -27,13 +49,14 @@
   text-transform: capitalize;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 920px) {
   .top-bar {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .month-nav {
+  .month-nav,
+  .top-nav {
     justify-content: center;
   }
 }

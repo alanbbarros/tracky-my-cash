@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CalendarMonth, CalendarDay } from '../../models/calendar.model';
+import { BillingCycle, CalendarDay } from '../../models/calendar.model';
 import { MonthCardComponent } from '../month-card/month-card.component';
 
 @Component({
@@ -11,7 +11,8 @@ import { MonthCardComponent } from '../month-card/month-card.component';
   styleUrl: './calendar-section.component.scss'
 })
 export class CalendarSectionComponent {
-  @Input() focusedMonth: CalendarMonth | null = null;
+  @Input() focusedCycle: BillingCycle | null = null;
   @Input() selectedDay: CalendarDay | null = null;
   @Output() daySelect = new EventEmitter<CalendarDay>();
+  @Output() openInvoice = new EventEmitter<void>();
 }

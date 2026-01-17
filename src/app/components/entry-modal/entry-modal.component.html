@@ -2,7 +2,7 @@
   <div class="modal">
     <header class="modal-header">
       <div>
-        <h2>Novo lançamento</h2>
+        <h2>{{ transactionToEdit ? 'Editar lançamento' : 'Novo lançamento' }}</h2>
         <p class="muted">Registre entradas, saídas e recorrências.</p>
       </div>
       <button class="icon-button" type="button" (click)="onClose()">×</button>
@@ -33,6 +33,43 @@
       </label>
 
       <label>
+        Meio de pagamento
+        <select [(ngModel)]="form.paymentMethod" name="paymentMethod">
+          <option value="debito">Débito</option>
+          <option value="credito">Crédito</option>
+          <option value="pix">Pix</option>
+        </select>
+      </label>
+
+      <label>
+        Cartão
+        <select [(ngModel)]="form.cardId" name="cardId" [disabled]="form.paymentMethod !== 'credito'">
+          <option *ngFor="let card of cards" [value]="card.id">{{ card.name }}</option>
+        </select>
+      </label>
+
+      <label>
+        Parcelas
+        <div class="split">
+          <input
+            type="number"
+            min="1"
+            [(ngModel)]="form.installmentCurrent"
+            name="installmentCurrent"
+            [disabled]="form.paymentMethod !== 'credito'"
+          />
+          <span class="muted">de</span>
+          <input
+            type="number"
+            min="1"
+            [(ngModel)]="form.installmentTotal"
+            name="installmentTotal"
+            [disabled]="form.paymentMethod !== 'credito'"
+          />
+        </div>
+      </label>
+
+      <label>
         Data do lançamento
         <input type="date" [(ngModel)]="form.date" name="date" />
       </label>
@@ -40,6 +77,7 @@
       <label>
         Recorrência
         <select [(ngModel)]="form.recurrence" name="recurrence">
+          <option value="nenhuma">Sem recorrência</option>
           <option value="mensal">Mensal</option>
           <option value="quinzenal">Quinzenal</option>
           <option value="semanal">Semanal</option>
@@ -49,7 +87,9 @@
 
       <div class="modal-actions">
         <button class="ghost" type="button" (click)="onClose()">Cancelar</button>
-        <button class="primary" type="submit">Salvar lançamento</button>
+        <button class="primary" type="submit">
+          {{ transactionToEdit ? 'Atualizar lançamento' : 'Salvar lançamento' }}
+        </button>
       </div>
     </form>
   </div>

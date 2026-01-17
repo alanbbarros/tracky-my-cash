@@ -1,7 +1,19 @@
 <section class="calendar">
+  <header class="cycle-header" *ngIf="focusedCycle">
+    <button class="cycle-link" type="button" (click)="openInvoice.emit()">
+      <div>
+        <span class="eyebrow">Fatura</span>
+        <strong>{{ focusedCycle.label }}</strong>
+      </div>
+      <div class="cycle-meta">
+        <span>{{ focusedCycle.periodLabel }}</span>
+        <span>Venc. {{ focusedCycle.dueDate | date: 'dd/MM' }}</span>
+      </div>
+    </button>
+  </header>
   <app-month-card
-    *ngIf="focusedMonth"
-    [month]="focusedMonth"
+    *ngIf="focusedCycle"
+    [month]="focusedCycle"
     [selectedDay]="selectedDay"
     (daySelect)="daySelect.emit($event)"
   ></app-month-card>

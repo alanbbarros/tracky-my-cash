@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CalendarDay, CalendarMonth } from '../../models/calendar.model';
+import { BillingCycle, CalendarDay } from '../../models/calendar.model';
+import { Transaction } from '../../models/transaction.model';
 import { CurrencyFormatService } from '../../services/currency-format.service';
 
 @Component({
@@ -12,16 +13,16 @@ import { CurrencyFormatService } from '../../services/currency-format.service';
 })
 export class DetailsPanelComponent {
   @Input() selectedDay: CalendarDay | null = null;
-  @Input() focusedMonth: CalendarMonth | null = null;
-  @Output() openBudget = new EventEmitter<CalendarMonth>();
+  @Input() focusedCycle: BillingCycle | null = null;
+  @Output() editTransaction = new EventEmitter<Transaction>();
+  @Output() deleteTransaction = new EventEmitter<Transaction>();
+  @Output() viewCycleTransactions = new EventEmitter<void>();
 
   constructor(private readonly currencyFormat: CurrencyFormatService) {}
 
   get selectedDayTitle(): string {
     if (!this.selectedDay) {
-      return this.focusedMonth
-        ? `Resumo de ${this.focusedMonth.label} ${this.focusedMonth.year}`
-        : 'Selecione um mês no calendário';
+      return this.focusedCycle ? `Resumo da ${this.focusedCycle.label}` : 'Selecione um ciclo no calendário';
     }
 
     return this.selectedDay.date.toLocaleDateString('pt-BR', {
@@ -32,15 +33,29 @@ export class DetailsPanelComponent {
     });
   }
 
-  get budgetStatusLabel(): string {
-    if (!this.focusedMonth) {
-      return 'Orçamento não selecionado';
+  get cycleStatusLabel(): string {
+    if (!this.focusedCycle) {
+      return 'Ciclo não selecionado';
     }
 
-    return this.focusedMonth.budgetConfigured ? 'Orçamento configurado' : 'Orçamento não configurado';
+    const map = {
+      aberta: 'Fatura aberta',
+      fechada: 'Fatura fechada',
+      paga: 'Fatura paga'
+    } as const;
+
+    return map[this.focusedCycle.status];
   }
 
   formatCurrency(value: number): string {
     return this.currencyFormat.format(value);
+  }
+
+  formatInstallment(transaction: Transaction): string | null {
+    if (!transaction.installment) {
+      return null;
+    }
+
+    return `${transaction.installment.current}/${transaction.installment.total}`;
   }
 }

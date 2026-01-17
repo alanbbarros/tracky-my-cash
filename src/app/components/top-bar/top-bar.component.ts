@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CalendarMonth } from '../../models/calendar.model';
+import { BillingCycle } from '../../models/calendar.model';
+
+export type AppView = 'calendar' | 'cards' | 'transactions' | 'invoice';
 
 @Component({
   selector: 'app-top-bar',
@@ -10,10 +12,12 @@ import { CalendarMonth } from '../../models/calendar.model';
   styleUrl: './top-bar.component.scss'
 })
 export class TopBarComponent {
-  @Input() focusedMonth: CalendarMonth | null = null;
+  @Input() focusedCycle: BillingCycle | null = null;
   @Input() canNavigatePrevious = false;
   @Input() canNavigateNext = false;
+  @Input() activeView: AppView = 'calendar';
   @Output() navigatePrevious = new EventEmitter<void>();
   @Output() navigateNext = new EventEmitter<void>();
   @Output() openNewEntry = new EventEmitter<void>();
+  @Output() viewChange = new EventEmitter<AppView>();
 }

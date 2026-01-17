@@ -1,0 +1,65 @@
+<section class="cards">
+  <header class="cards-header">
+    <div>
+      <h2>Cartões</h2>
+      <p class="muted">Gerencie limites, datas de fechamento e vencimentos.</p>
+    </div>
+    <button class="primary" type="button" (click)="openCreate()">Cadastrar cartão</button>
+  </header>
+
+  <div class="card-list">
+    <article class="card-item" *ngFor="let summary of cycleSummaries">
+      <div class="card-main">
+        <div>
+          <h3>{{ summary.card.name }}</h3>
+          <p class="muted">
+            Limite total {{ formatCurrency(summary.card.limit) }} • Fech. {{ summary.card.closingDay }}/Venc.
+            {{ summary.card.dueDay }}
+          </p>
+        </div>
+        <div class="card-amounts">
+          <div>
+            <span class="label">Limite usado na fatura</span>
+            <strong>{{ formatCurrency(summary.usedLimit) }}</strong>
+          </div>
+          <div>
+            <span class="label">Próximo vencimento</span>
+            <strong>{{ summary.currentCycle?.dueDate | date: 'dd/MM' }}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="ghost" type="button" (click)="openEdit(summary.card)">Editar cartão</button>
+        <button class="ghost" type="button" (click)="viewCurrentInvoice.emit(summary.card)">
+          Ver fatura atual
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <form class="card-form" *ngIf="isFormOpen" (ngSubmit)="submitForm()">
+    <h3>{{ editingCard ? 'Editar cartão' : 'Novo cartão' }}</h3>
+    <div class="form-grid">
+      <label>
+        Nome do cartão
+        <input type="text" [(ngModel)]="form.name" name="name" />
+      </label>
+      <label>
+        Limite
+        <input type="number" [(ngModel)]="form.limit" name="limit" />
+      </label>
+      <label>
+        Dia de fechamento
+        <input type="number" min="1" max="31" [(ngModel)]="form.closingDay" name="closingDay" />
+      </label>
+      <label>
+        Dia de vencimento
+        <input type="number" min="1" max="31" [(ngModel)]="form.dueDay" name="dueDay" />
+      </label>
+    </div>
+    <div class="form-actions">
+      <button class="ghost" type="button" (click)="cancelForm()">Cancelar</button>
+      <button class="primary" type="submit">Salvar cartão</button>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,62 @@
+<section class="transactions">
+  <header class="transactions-header">
+    <div>
+      <h2>Lançamentos</h2>
+      <p class="muted">Visualize, edite e filtre todos os lançamentos.</p>
+    </div>
+  </header>
+
+  <div class="filters">
+    <label>
+      Período inicial
+      <input type="date" [(ngModel)]="filters.startDate" name="startDate" />
+    </label>
+    <label>
+      Período final
+      <input type="date" [(ngModel)]="filters.endDate" name="endDate" />
+    </label>
+    <label>
+      Categoria
+      <input type="text" placeholder="Ex: Mercado" [(ngModel)]="filters.category" name="category" />
+    </label>
+    <label>
+      Cartão
+      <select [(ngModel)]="filters.cardId" name="cardId">
+        <option value="">Todos</option>
+        <option *ngFor="let card of cards" [value]="card.id">{{ card.name }}</option>
+      </select>
+    </label>
+    <label>
+      Texto
+      <input type="text" placeholder="Buscar por descrição" [(ngModel)]="filters.text" name="text" />
+    </label>
+  </div>
+
+  <div class="transaction-list">
+    <article class="transaction-item" *ngFor="let transaction of filteredTransactions">
+      <div class="transaction-info">
+        <div>
+          <h3>{{ transaction.title }}</h3>
+          <p class="muted">
+            {{ transaction.date | date: 'dd/MM/yyyy' }} • {{ transaction.category }} •
+            {{ transaction.type === 'entrada' ? 'Entrada' : 'Saída' }} •
+            {{ transaction.paymentMethod | titlecase }}
+            <ng-container *ngIf="transaction.recurrence !== 'nenhuma'">• Recorrente</ng-container>
+            <ng-container *ngIf="installmentLabel(transaction)">• {{ installmentLabel(transaction) }}</ng-container>
+          </p>
+          <p class="muted" *ngIf="transaction.paymentMethod === 'credito'">
+            Cartão: {{ resolveCardName(transaction.cardId) }}
+          </p>
+        </div>
+        <div class="transaction-amount" [class.negative]="transaction.amount < 0">
+          {{ formatCurrency(transaction.amount) }}
+        </div>
+      </div>
+      <div class="transaction-actions">
+        <button class="ghost" type="button" (click)="editTransaction.emit(transaction)">Editar</button>
+        <button class="ghost danger" type="button" (click)="deleteTransaction.emit(transaction)">Excluir</button>
+      </div>
+    </article>
+    <p *ngIf="filteredTransactions.length === 0" class="muted empty">Nenhum lançamento encontrado.</p>
+  </div>
+</section>

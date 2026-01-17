@@ -1,21 +1,47 @@
 <header class="top-bar">
   <div class="brand">Track My Cash</div>
-  <div class="month-nav" *ngIf="focusedMonth">
+  <nav class="top-nav">
+    <button
+      class="ghost"
+      type="button"
+      [class.active]="activeView === 'calendar'"
+      (click)="viewChange.emit('calendar')"
+    >
+      Calendário
+    </button>
+    <button
+      class="ghost"
+      type="button"
+      [class.active]="activeView === 'cards'"
+      (click)="viewChange.emit('cards')"
+    >
+      Cartões
+    </button>
+    <button
+      class="ghost"
+      type="button"
+      [class.active]="activeView === 'transactions'"
+      (click)="viewChange.emit('transactions')"
+    >
+      Lançamentos
+    </button>
+  </nav>
+  <div class="month-nav" *ngIf="focusedCycle">
     <button
       class="icon-button"
       type="button"
       [disabled]="!canNavigatePrevious"
-      aria-label="Mês anterior"
+      aria-label="Ciclo anterior"
       (click)="navigatePrevious.emit()"
     >
       ‹
     </button>
-    <span class="month-label">{{ focusedMonth.label }} {{ focusedMonth.year }}</span>
+    <span class="month-label">{{ focusedCycle.label }}</span>
     <button
       class="icon-button"
       type="button"
       [disabled]="!canNavigateNext"
-      aria-label="Próximo mês"
+      aria-label="Próximo ciclo"
       (click)="navigateNext.emit()"
     >
       ›
