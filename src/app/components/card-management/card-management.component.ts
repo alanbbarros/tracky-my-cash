@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BillingCycle } from '../../models/calendar.model';
 import { CreditCard } from '../../models/card.model';
 import { CurrencyFormatService } from '../../services/currency-format.service';
+import { NotificationService } from '../../services/notification.service';
 
 export interface CardOverview {
   card: CreditCard;
@@ -35,11 +36,21 @@ export class CardManagementComponent {
 
   form: CardForm = this.createInitialForm();
   editingCardId: string | null = null;
+  isModalOpen = false;
 
-  constructor(private readonly currencyFormat: CurrencyFormatService) {}
+  constructor(
+    private readonly currencyFormat: CurrencyFormatService,
+    private readonly notificationService: NotificationService
+  ) {}
 
   formatCurrency(value: number): string {
     return this.currencyFormat.format(value);
+  }
+
+  openNewCard(): void {
+    this.editingCardId = null;
+    this.form = this.createInitialForm();
+    this.isModalOpen = true;
   }
 
   startEdit(card: CreditCard): void {
@@ -50,15 +61,18 @@ export class CardManagementComponent {
       closingDay: card.closingDay.toString(),
       dueDay: card.dueDay.toString()
     };
+    this.isModalOpen = true;
   }
 
   resetForm(): void {
     this.editingCardId = null;
     this.form = this.createInitialForm();
+    this.isModalOpen = false;
   }
 
   submitForm(): void {
     if (!this.form.name || !this.form.limit || !this.form.closingDay || !this.form.dueDay) {
+      this.notificationService.notify('warning', 'Preencha todos os campos do cartão.');
       return;
     }
     const payload: CreditCard = {

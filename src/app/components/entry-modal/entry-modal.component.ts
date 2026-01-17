@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CreditCard } from '../../models/card.model';
 import { NewTransaction, Transaction } from '../../models/transaction.model';
 import { CurrencyFormatService } from '../../services/currency-format.service';
+import { NotificationService } from '../../services/notification.service';
 import { formatIsoDate } from '../../utils/calendar.utils';
 
 interface EntryForm {
@@ -38,7 +39,10 @@ export class EntryModalComponent implements OnChanges {
 
   form: EntryForm = this.getInitialForm();
 
-  constructor(private readonly currencyFormat: CurrencyFormatService) {}
+  constructor(
+    private readonly currencyFormat: CurrencyFormatService,
+    private readonly notificationService: NotificationService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['entryToEdit'] && this.entryToEdit) {
@@ -68,9 +72,11 @@ export class EntryModalComponent implements OnChanges {
   onSubmit(): void {
     const amountValue = this.parseAmount(this.form.amount);
     if (!this.form.title || !this.form.category || !amountValue || !this.form.date) {
+      this.notificationService.notify('warning', 'Preencha título, categoria, data e valor válidos.');
       return;
     }
     if (this.form.paymentMethod === 'credito' && !this.form.cardId) {
+      this.notificationService.notify('warning', 'Selecione um cartão para compras no crédito.');
       return;
     }
 

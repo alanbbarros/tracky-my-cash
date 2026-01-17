@@ -14,7 +14,7 @@ export class TransactionStoreService {
     return this.transactionsSubject.getValue();
   }
 
-  addTransaction(entry: NewTransaction): void {
+  addTransaction(entry: NewTransaction): boolean {
     const transaction: Transaction = {
       ...entry,
       id: this.createId(),
@@ -22,10 +22,10 @@ export class TransactionStoreService {
     };
     const updated = [...this.transactionsSubject.getValue(), transaction];
     this.transactionsSubject.next(updated);
-    this.saveToStorage(updated);
+    return this.saveToStorage(updated);
   }
 
-  updateTransaction(id: string, entry: NewTransaction): void {
+  updateTransaction(id: string, entry: NewTransaction): boolean {
     const updated = this.transactionsSubject
       .getValue()
       .map((transaction) => {
@@ -37,19 +37,19 @@ export class TransactionStoreService {
         return { ...transaction, ...entry, id, recurrenceGroupId };
       });
     this.transactionsSubject.next(updated);
-    this.saveToStorage(updated);
+    return this.saveToStorage(updated);
   }
 
-  updateTransactions(updater: (transactions: Transaction[]) => Transaction[]): void {
+  updateTransactions(updater: (transactions: Transaction[]) => Transaction[]): boolean {
     const updated = updater(this.transactionsSubject.getValue());
     this.transactionsSubject.next(updated);
-    this.saveToStorage(updated);
+    return this.saveToStorage(updated);
   }
 
-  deleteTransaction(id: string): void {
+  deleteTransaction(id: string): boolean {
     const updated = this.transactionsSubject.getValue().filter((transaction) => transaction.id !== id);
     this.transactionsSubject.next(updated);
-    this.saveToStorage(updated);
+    return this.saveToStorage(updated);
   }
 
   private createId(): string {
@@ -61,7 +61,12 @@ export class TransactionStoreService {
   }
 
   private loadFromStorage(): Transaction[] {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const storage = this.getStorage();
+    if (!storage) {
+      return [];
+    }
+
+    const raw = storage.getItem(STORAGE_KEY);
     if (!raw) {
       return [];
     }
@@ -88,7 +93,27 @@ export class TransactionStoreService {
     }
   }
 
-  private saveToStorage(transactions: Transaction[]): void {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+  private saveToStorage(transactions: Transaction[]): boolean {
+    const storage = this.getStorage();
+    if (!storage) {
+      return false;
+    }
+    try {
+      storage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private getStorage(): Storage | null {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    try {
+      return window.localStorage;
+    } catch {
+      return null;
+    }
   }
 }

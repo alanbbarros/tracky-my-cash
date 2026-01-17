@@ -3,7 +3,6 @@
     <h2>{{ selectedDayTitle }}</h2>
 
     <ng-container *ngIf="selectedDay; else monthOverview">
-      <button class="primary full" type="button" (click)="openNewEntry.emit()">Novo lançamento</button>
       <div class="details-balance">
         <p>Saldo projetado no dia</p>
         <strong [class.negative]="selectedDay.balance < 0">
@@ -57,7 +56,6 @@
     </ng-container>
 
     <ng-template #monthOverview>
-      <button class="primary full" type="button" (click)="openNewEntry.emit()">Novo lançamento</button>
       <div class="details-balance">
         <p>Saldo no início do ciclo</p>
         <strong [class.negative]="focusedMonth?.startBalance && focusedMonth.startBalance < 0">

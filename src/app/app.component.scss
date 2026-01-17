@@ -91,6 +91,54 @@
   text-decoration: underline;
 }
 
+.toast-stack {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: grid;
+  gap: 10px;
+  z-index: 40;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 240px;
+  max-width: 360px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+  font-size: 13px;
+}
+
+.toast.success {
+  border-color: rgba(22, 163, 74, 0.3);
+  background: rgba(22, 163, 74, 0.1);
+  color: #14532d;
+}
+
+.toast.info {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.1);
+  color: #1e3a8a;
+}
+
+.toast.warning {
+  border-color: rgba(234, 179, 8, 0.35);
+  background: rgba(234, 179, 8, 0.12);
+  color: #713f12;
+}
+
+.toast.error {
+  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 0.12);
+  color: #7f1d1d;
+}
+
 @media (max-width: 1024px) {
   .content {
     grid-template-columns: 1fr;
