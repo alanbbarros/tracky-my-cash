@@ -1,0 +1,73 @@
+<section class="transactions">
+  <header class="transactions-header">
+    <div>
+      <p class="eyebrow">Lançamentos</p>
+      <h2>Lista global de lançamentos</h2>
+      <p class="muted">Filtre por período, categoria, cartão ou texto.</p>
+    </div>
+  </header>
+
+  <div class="filters">
+    <label>
+      Período de
+      <input type="date" [(ngModel)]="form.startDate" (ngModelChange)="onFilterChange()" />
+    </label>
+    <label>
+      Até
+      <input type="date" [(ngModel)]="form.endDate" (ngModelChange)="onFilterChange()" />
+    </label>
+    <label>
+      Categoria
+      <select [(ngModel)]="form.category" (ngModelChange)="onFilterChange()">
+        <option [ngValue]="undefined">Todas</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>
+    </label>
+    <label>
+      Cartão
+      <select [(ngModel)]="form.cardId" (ngModelChange)="onFilterChange()">
+        <option [ngValue]="undefined">Todos</option>
+        <option *ngFor="let card of cards" [value]="card.id">{{ card.name }}</option>
+      </select>
+    </label>
+    <label class="search">
+      Texto
+      <input type="text" [(ngModel)]="form.text" (ngModelChange)="onFilterChange()" placeholder="Buscar descrição" />
+    </label>
+  </div>
+
+  <div class="list">
+    <div class="list-header">
+      <span>Data</span>
+      <span>Descrição</span>
+      <span>Valor</span>
+      <span>Ações</span>
+    </div>
+
+    <div class="list-row" *ngFor="let transaction of transactions">
+      <span>{{ transaction.date | date: 'dd/MM' }}</span>
+      <div class="description">
+        <strong>{{ transaction.title }}</strong>
+        <span class="muted">
+          {{ transaction.category }} • {{ transaction.paymentMethod | uppercase }}
+          <ng-container *ngIf="transaction.recurrence !== 'nenhuma'"> • recorrente</ng-container>
+          <ng-container *ngIf="transaction.installment">
+            • {{ transaction.installment.current }}/{{ transaction.installment.total }}
+          </ng-container>
+        </span>
+      </div>
+      <span [class.negative]="transaction.amount < 0">
+        {{ formatCurrency(transaction.amount) }}
+      </span>
+      <div class="row-actions">
+        <span class="tag" [class.income]="transaction.amount > 0" [class.expense]="transaction.amount < 0">
+          {{ transaction.amount > 0 ? 'Entrada' : 'Saída' }}
+        </span>
+        <button class="ghost" type="button" (click)="editTransaction.emit(transaction)">Editar</button>
+        <button class="ghost" type="button" (click)="deleteTransaction.emit(transaction)">Excluir</button>
+      </div>
+    </div>
+
+    <p *ngIf="transactions.length === 0" class="muted empty-state">Nenhum lançamento encontrado.</p>
+  </div>
+</section>

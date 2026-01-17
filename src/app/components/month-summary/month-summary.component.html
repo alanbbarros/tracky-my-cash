@@ -1,17 +1,14 @@
 <section class="month-summary" *ngIf="month">
   <header class="summary-header">
     <div>
-      <p class="eyebrow">Resumo do mês em foco</p>
-      <h2>Resumo de {{ month.label }} {{ month.year }}</h2>
-      <p class="muted">Saldo projetado e status do orçamento dentro do mês selecionado.</p>
+      <p class="eyebrow">Resumo do ciclo em foco</p>
+      <h2>Fatura de {{ month.label }} {{ month.year }}</h2>
+      <p class="muted">Saldo projetado e período da fatura selecionada.</p>
     </div>
-    <button class="primary" type="button" (click)="openBudget.emit(month)">
-      Ver orçamento do mês
-    </button>
   </header>
   <div class="summary-grid">
     <div class="summary-item">
-      <span class="label">Saldo no início do mês</span>
+      <span class="label">Saldo no início do ciclo</span>
       <strong [class.negative]="month.startBalance < 0">
         {{ formatCurrency(month.startBalance) }}
       </strong>
@@ -23,9 +20,9 @@
       </strong>
     </div>
     <div class="summary-item">
-      <span class="label">Status do orçamento</span>
-      <strong [class.positive]="month.budgetConfigured" [class.negative]="!month.budgetConfigured">
-        {{ month.budgetConfigured ? 'Configurado' : 'Não configurado' }}
+      <span class="label">Período da fatura</span>
+      <strong>
+        {{ month.cycleStart | date: 'dd/MM' }} → {{ month.cycleEnd | date: 'dd/MM' }}
       </strong>
     </div>
   </div>

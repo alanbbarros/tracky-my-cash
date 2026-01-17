@@ -1,0 +1,94 @@
+<section class="cards">
+  <header class="cards-header">
+    <div>
+      <p class="eyebrow">Gestão de cartões</p>
+      <h2>Cartões de crédito</h2>
+      <p class="muted">Cadastre e acompanhe limites, fechamento e vencimento.</p>
+    </div>
+    <button class="ghost" type="button" (click)="resetForm()" *ngIf="editingCardId">
+      Cancelar edição
+    </button>
+  </header>
+
+  <div class="cards-grid">
+    <article class="card-item" *ngFor="let overview of cardOverviews">
+      <header>
+        <div>
+          <h3>{{ overview.card.name }}</h3>
+          <p class="muted">Fechamento dia {{ overview.card.closingDay }} • Vencimento {{ overview.card.dueDay }}</p>
+        </div>
+        <span class="status" [class.active]="overview.card.id === activeCardId">
+          {{ overview.card.id === activeCardId ? 'Ativo' : 'Disponível' }}
+        </span>
+      </header>
+      <div class="limit-row">
+        <div>
+          <span class="label">Limite total</span>
+          <strong>{{ formatCurrency(overview.card.limit) }}</strong>
+        </div>
+        <div>
+          <span class="label">Limite usado na fatura atual</span>
+          <strong>{{ formatCurrency(overview.usedLimit) }}</strong>
+        </div>
+      </div>
+      <div class="limit-progress">
+        <span [style.width.%]="overview.usedPercent"></span>
+      </div>
+      <div class="meta-row" *ngIf="overview.currentCycle">
+        <span class="muted">
+          Próximo vencimento: {{ overview.currentCycle.dueDate | date: 'dd/MM' }}
+        </span>
+        <span class="muted">
+          Ciclo: {{ overview.currentCycle.cycleStart | date: 'dd/MM' }} →
+          {{ overview.currentCycle.cycleEnd | date: 'dd/MM' }}
+        </span>
+      </div>
+      <div class="card-actions">
+        <button
+          class="ghost"
+          type="button"
+          (click)="selectCard.emit(overview.card)"
+          *ngIf="overview.card.id !== activeCardId"
+        >
+          Definir como ativo
+        </button>
+        <button class="ghost" type="button" (click)="startEdit(overview.card)">Editar</button>
+        <button
+          class="primary"
+          type="button"
+          (click)="openInvoice.emit(overview.currentCycle!)"
+          [disabled]="!overview.currentCycle"
+        >
+          Ver fatura atual
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <form class="card-form" (ngSubmit)="submitForm()">
+    <h3>{{ editingCardId ? 'Editar cartão' : 'Novo cartão' }}</h3>
+    <div class="form-grid">
+      <label>
+        Nome do cartão
+        <input type="text" [(ngModel)]="form.name" name="name" placeholder="Ex: Cartão principal" />
+      </label>
+      <label>
+        Limite
+        <input type="number" min="0" [(ngModel)]="form.limit" name="limit" placeholder="R$ 0,00" />
+      </label>
+      <label>
+        Dia de fechamento
+        <input type="number" min="1" max="31" [(ngModel)]="form.closingDay" name="closingDay" />
+      </label>
+      <label>
+        Dia de vencimento
+        <input type="number" min="1" max="31" [(ngModel)]="form.dueDay" name="dueDay" />
+      </label>
+    </div>
+    <div class="form-actions">
+      <button class="primary" type="submit">
+        {{ editingCardId ? 'Salvar alterações' : 'Cadastrar cartão' }}
+      </button>
+    </div>
+  </form>
+</section>

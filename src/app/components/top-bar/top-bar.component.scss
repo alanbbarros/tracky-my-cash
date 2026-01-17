@@ -4,12 +4,36 @@
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .brand {
   font-weight: 700;
   font-size: 18px;
   letter-spacing: 0.01em;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+}
+
+.top-nav button {
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.top-nav button.active {
+  background: #eef2ff;
+  color: #1e1b4b;
 }
 
 .month-nav {

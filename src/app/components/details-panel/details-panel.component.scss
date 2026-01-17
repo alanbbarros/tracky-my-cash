@@ -65,6 +65,7 @@
   align-items: center;
   padding: 8px 0;
   border-bottom: 1px solid #e2e8f0;
+  gap: 12px;
 }
 
 .transactions li:last-child {
@@ -74,6 +75,17 @@
 .transaction-title {
   margin: 0;
   font-weight: 600;
+}
+
+.transaction-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.transaction-actions button {
+  padding: 6px 12px;
+  font-size: 12px;
 }
 
 .full {

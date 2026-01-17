@@ -52,6 +52,23 @@
   }
 }
 
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.installment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;

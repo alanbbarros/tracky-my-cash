@@ -17,14 +17,17 @@ export interface CalendarCell {
   isPlaceholder: boolean;
 }
 
-export interface CalendarMonth {
+export interface BillingCycle {
   label: string;
   year: number;
   monthIndex: number;
+  cycleStart: Date;
+  cycleEnd: Date;
+  dueDate: Date;
+  cardId: string;
   startBalance: number;
   endBalance: number;
   incomeTotal: number;
   expensesTotal: number;
-  budgetConfigured: boolean;
   cells: CalendarCell[];
 }

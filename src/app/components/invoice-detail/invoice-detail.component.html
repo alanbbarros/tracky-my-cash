@@ -1,0 +1,72 @@
+<section class="invoice" *ngIf="cycle && card">
+  <header class="invoice-header">
+    <div>
+      <p class="eyebrow">Fatura do cartão</p>
+      <h2>{{ card.name }}</h2>
+      <p class="muted">
+        {{ cycle.cycleStart | date: 'dd MMM' }} → {{ cycle.cycleEnd | date: 'dd MMM' }} •
+        vencimento {{ cycle.dueDate | date: 'dd/MM' }}
+      </p>
+    </div>
+    <span class="status" [ngClass]="status">{{ status }}</span>
+  </header>
+
+  <div class="invoice-overview">
+    <div class="overview-card">
+      <span class="label">Total da fatura</span>
+      <strong>{{ formatCurrency(total) }}</strong>
+    </div>
+    <div class="overview-card">
+      <span class="label">Limite utilizado</span>
+      <strong>{{ limitPercent | number: '1.0-0' }}%</strong>
+      <div class="progress">
+        <span [style.width.%]="limitPercent"></span>
+      </div>
+    </div>
+    <div class="overview-card">
+      <span class="label">Status</span>
+      <strong class="status-text">{{ status }}</strong>
+      <button class="ghost" type="button" (click)="openTransactions.emit(toFiltersForCycle())">
+        Ver lançamentos da fatura
+      </button>
+    </div>
+  </div>
+
+  <div class="invoice-list">
+    <div class="list-header">
+      <span>Data</span>
+      <span>Descrição</span>
+      <span>Valor</span>
+      <span>Ações</span>
+    </div>
+    <div class="list-row" *ngFor="let transaction of transactions">
+      <span>{{ transaction.date | date: 'dd/MM' }}</span>
+      <div>
+        <strong>{{ transaction.title }}</strong>
+        <span class="muted">
+          {{ transaction.category }}
+          <ng-container *ngIf="transaction.installment">
+            • {{ transaction.installment.current }}/{{ transaction.installment.total }}
+          </ng-container>
+        </span>
+      </div>
+      <span class="negative">{{ formatCurrency(transaction.amount) }}</span>
+      <div class="row-actions">
+        <button class="ghost" type="button" (click)="editTransaction.emit(transaction)">Editar</button>
+        <button class="ghost" type="button" (click)="deleteTransaction.emit(transaction)">Excluir</button>
+      </div>
+    </div>
+    <p class="muted empty-state" *ngIf="transactions.length === 0">Nenhuma compra no ciclo.</p>
+  </div>
+
+  <div class="invoice-actions">
+    <button
+      class="primary"
+      type="button"
+      (click)="markAsPaid.emit(cycle)"
+      [disabled]="status === 'paga'"
+    >
+      Marcar fatura como paga
+    </button>
+  </div>
+</section>

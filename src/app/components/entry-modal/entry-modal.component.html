@@ -2,8 +2,8 @@
   <div class="modal">
     <header class="modal-header">
       <div>
-        <h2>Novo lançamento</h2>
-        <p class="muted">Registre entradas, saídas e recorrências.</p>
+        <h2>{{ entryToEdit ? 'Editar lançamento' : 'Novo lançamento' }}</h2>
+        <p class="muted">Registre entradas, saídas, recorrências e parcelamentos.</p>
       </div>
       <button class="icon-button" type="button" (click)="onClose()">×</button>
     </header>
@@ -33,6 +33,23 @@
       </label>
 
       <label>
+        Meio de pagamento
+        <select [(ngModel)]="form.paymentMethod" name="paymentMethod">
+          <option value="debito">Débito</option>
+          <option value="pix">Pix</option>
+          <option value="credito">Crédito</option>
+        </select>
+      </label>
+
+      <label *ngIf="form.paymentMethod === 'credito'">
+        Cartão
+        <select [(ngModel)]="form.cardId" name="cardId">
+          <option [ngValue]="''">Selecione um cartão</option>
+          <option *ngFor="let card of cards" [value]="card.id">{{ card.name }}</option>
+        </select>
+      </label>
+
+      <label>
         Data do lançamento
         <input type="date" [(ngModel)]="form.date" name="date" />
       </label>
@@ -40,16 +57,34 @@
       <label>
         Recorrência
         <select [(ngModel)]="form.recurrence" name="recurrence">
-          <option value="mensal">Mensal</option>
-          <option value="quinzenal">Quinzenal</option>
+          <option value="nenhuma">Não recorrente</option>
           <option value="semanal">Semanal</option>
-          <option value="trimestral">Trimestral</option>
+          <option value="mensal">Mensal</option>
+          <option value="anual">Anual</option>
         </select>
       </label>
 
+      <label class="checkbox">
+        <input type="checkbox" [(ngModel)]="form.isInstallment" name="isInstallment" />
+        Compra parcelada
+      </label>
+
+      <div class="installment-grid" *ngIf="form.isInstallment">
+        <label>
+          Parcela atual
+          <input type="number" min="1" [(ngModel)]="form.installmentCurrent" name="installmentCurrent" />
+        </label>
+        <label>
+          Total de parcelas
+          <input type="number" min="1" [(ngModel)]="form.installmentTotal" name="installmentTotal" />
+        </label>
+      </div>
+
       <div class="modal-actions">
         <button class="ghost" type="button" (click)="onClose()">Cancelar</button>
-        <button class="primary" type="submit">Salvar lançamento</button>
+        <button class="primary" type="submit">
+          {{ entryToEdit ? 'Salvar alterações' : 'Salvar lançamento' }}
+        </button>
       </div>
     </form>
   </div>
