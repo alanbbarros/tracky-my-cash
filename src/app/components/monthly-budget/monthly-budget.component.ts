@@ -22,6 +22,35 @@ export class MonthlyBudgetComponent {
     return this.currencyFormat.format(value);
   }
 
+  totalPlanned(): number {
+    return this.categories.reduce((total, category) => total + category.planned, 0);
+  }
+
+  totalCommitted(): number {
+    return this.categories.reduce((total, category) => total + category.committed, 0);
+  }
+
+  totalRemaining(): number {
+    return this.totalPlanned() - this.totalCommitted();
+  }
+
+  percentUsed(category: BudgetCategory): number {
+    if (!category.planned) {
+      return 0;
+    }
+
+    return Math.min((category.committed / category.planned) * 100, 100);
+  }
+
+  overallUsage(): number {
+    const planned = this.totalPlanned();
+    if (!planned) {
+      return 0;
+    }
+
+    return Math.min((this.totalCommitted() / planned) * 100, 100);
+  }
+
   remaining(category: BudgetCategory): number {
     return category.planned - category.committed;
   }

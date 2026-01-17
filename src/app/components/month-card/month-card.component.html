@@ -1,16 +1,4 @@
-<article class="month" (click)="monthFocus.emit(month)">
-  <div class="month-title">
-    <div class="month-label">
-      <span>{{ month.label }}</span>
-      <span class="muted">{{ month.year }}</span>
-    </div>
-    <span class="month-status" [class.configured]="month.budgetConfigured">
-      {{ month.budgetConfigured ? 'Orçamento configurado' : 'Orçamento não configurado' }}
-    </span>
-  </div>
-  <button class="month-cta" type="button" (click)="openBudget.emit(month)">
-    Ver orçamento de {{ month.label }} {{ month.year }}
-  </button>
+<article class="month">
   <div class="weekday-row">
     <span>Seg</span>
     <span>Ter</span>
@@ -24,7 +12,8 @@
     <app-day-cell
       *ngFor="let cell of month.cells"
       [cell]="cell"
-      (dayHover)="dayHover.emit($event)"
+      [isSelected]="cell.day?.isoDate === selectedDay?.isoDate"
+      (daySelect)="daySelect.emit($event)"
     ></app-day-cell>
   </div>
 </article>

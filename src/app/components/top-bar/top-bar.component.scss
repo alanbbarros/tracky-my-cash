@@ -1,29 +1,39 @@
 .top-bar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
+}
 
-  h1 {
-    font-size: 32px;
-    margin: 8px 0 12px;
-  }
+.brand {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
 
-  .subtitle {
-    max-width: 560px;
-    color: #94a3b8;
-    line-height: 1.5;
-  }
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+}
 
-  .actions {
-    display: flex;
-    gap: 12px;
-  }
+.month-label {
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
 @media (max-width: 720px) {
   .top-bar {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .month-nav {
+    justify-content: center;
   }
 }

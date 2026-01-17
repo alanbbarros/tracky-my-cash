@@ -4,9 +4,9 @@
 
 body {
   margin: 0;
-  background: #0b1120;
+  background: #f5f7fb;
   font-family: 'Inter', system-ui, sans-serif;
-  color: #e2e8f0;
+  color: #0f172a;
 }
 
 button {
@@ -21,18 +21,25 @@ button {
   &:hover {
     transform: translateY(-1px);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 button.primary {
   background: #4f46e5;
   color: #ffffff;
-  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.25);
 }
 
 button.ghost {
-  background: #0f172a;
-  color: #e2e8f0;
-  border: 1px solid #1f2937;
+  background: #eef2ff;
+  color: #1e1b4b;
+  border: 1px solid #c7d2fe;
 }
 
 .eyebrow {
@@ -40,23 +47,23 @@ button.ghost {
   letter-spacing: 0.24em;
   font-size: 12px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #64748b;
 }
 
 .negative {
-  color: #f87171;
+  color: #dc2626;
 }
 
 .muted {
-  color: #94a3b8;
+  color: #64748b;
   font-size: 12px;
 }
 
 .icon-button {
   background: transparent;
   border-radius: 999px;
-  border: 1px solid #1f2937;
-  color: #e2e8f0;
+  border: 1px solid #cbd5f5;
+  color: #1e293b;
   width: 32px;
   height: 32px;
   padding: 0;
