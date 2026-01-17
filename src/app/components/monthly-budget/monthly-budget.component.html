@@ -1,9 +1,11 @@
 <section class="budget">
   <header class="budget-header">
     <div>
-      <p class="eyebrow">Orçamento mensal</p>
-      <h2>Orçamento de {{ month.label }} {{ month.year }}</h2>
-      <p class="subtitle">Visualize rapidamente o ritmo de consumo e o espaço disponível.</p>
+      <p class="eyebrow">Orçamento da fatura</p>
+      <h2>{{ cycle.label }}</h2>
+      <p class="subtitle">
+        {{ cycle.cycleRangeLabel }} • vencimento em {{ cycle.dueDateLabel }}
+      </p>
     </div>
     <div class="actions">
       <button class="ghost" type="button">Editar categorias</button>
@@ -13,7 +15,7 @@
 
   <div class="budget-overview">
     <article class="overview-card">
-      <span class="label">Planejado no mês</span>
+      <span class="label">Planejado na fatura</span>
       <strong>{{ formatCurrency(totalPlanned()) }}</strong>
     </article>
     <article class="overview-card">
@@ -25,7 +27,7 @@
       <strong [class.negative]="totalRemaining() < 0">{{ formatCurrency(totalRemaining()) }}</strong>
     </article>
     <article class="overview-card usage">
-      <span class="label">Uso do orçamento</span>
+      <span class="label">Uso do orçamento da fatura</span>
       <strong>{{ overallUsage() | number: '1.0-0' }}%</strong>
       <div class="progress">
         <span [style.width.%]="overallUsage()"></span>

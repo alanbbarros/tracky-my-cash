@@ -10,7 +10,7 @@
   </div>
   <div class="days-grid">
     <app-day-cell
-      *ngFor="let cell of month.cells"
+      *ngFor="let cell of cycle.cells"
       [cell]="cell"
       [isSelected]="cell.day?.isoDate === selectedDay?.isoDate"
       (daySelect)="daySelect.emit($event)"

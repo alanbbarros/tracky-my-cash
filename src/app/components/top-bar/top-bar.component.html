@@ -1,21 +1,26 @@
 <header class="top-bar">
   <div class="brand">Track My Cash</div>
-  <div class="month-nav" *ngIf="focusedMonth">
+  <div class="month-nav" *ngIf="focusedCycle">
     <button
       class="icon-button"
       type="button"
       [disabled]="!canNavigatePrevious"
-      aria-label="Mês anterior"
+      aria-label="Fatura anterior"
       (click)="navigatePrevious.emit()"
     >
       ‹
     </button>
-    <span class="month-label">{{ focusedMonth.label }} {{ focusedMonth.year }}</span>
+    <div class="month-label">
+      <span class="title">{{ focusedCycle.label }}</span>
+      <span class="subtitle">
+        {{ focusedCycle.cycleRangeLabel }} • venc. {{ focusedCycle.dueDateLabel }}
+      </span>
+    </div>
     <button
       class="icon-button"
       type="button"
       [disabled]="!canNavigateNext"
-      aria-label="Próximo mês"
+      aria-label="Próxima fatura"
       (click)="navigateNext.emit()"
     >
       ›

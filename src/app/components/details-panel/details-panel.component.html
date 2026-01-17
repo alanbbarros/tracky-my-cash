@@ -1,6 +1,9 @@
 <aside class="details">
   <div class="details-card">
     <h2>{{ selectedDayTitle }}</h2>
+    <p class="muted" *ngIf="focusedCycle">
+      {{ focusedCycle.cycleRangeLabel }} • venc. {{ focusedCycle.dueDateLabel }}
+    </p>
 
     <ng-container *ngIf="selectedDay; else monthOverview">
       <div class="details-balance">
@@ -43,55 +46,55 @@
       <button
         class="ghost full"
         type="button"
-        *ngIf="focusedMonth"
-        (click)="openBudget.emit(focusedMonth)"
+        *ngIf="focusedCycle"
+        (click)="openBudget.emit(focusedCycle)"
       >
-        Ver orçamento de {{ focusedMonth.label }} {{ focusedMonth.year }}
+        Ver orçamento da fatura
       </button>
     </ng-container>
 
     <ng-template #monthOverview>
       <div class="details-balance">
-        <p>Saldo no início de {{ focusedMonth?.label }} {{ focusedMonth?.year }}</p>
-        <strong [class.negative]="focusedMonth?.startBalance && focusedMonth.startBalance < 0">
-          {{ focusedMonth ? formatCurrency(focusedMonth.startBalance) : '—' }}
+        <p>Saldo no início da fatura</p>
+        <strong [class.negative]="focusedCycle?.startBalance && focusedCycle.startBalance < 0">
+          {{ focusedCycle ? formatCurrency(focusedCycle.startBalance) : '—' }}
         </strong>
       </div>
       <div class="details-row">
         <div>
           <span class="label">Saldo final estimado</span>
-          <span class="value" [class.negative]="focusedMonth?.endBalance && focusedMonth.endBalance < 0">
-            {{ focusedMonth ? formatCurrency(focusedMonth.endBalance) : '—' }}
+          <span class="value" [class.negative]="focusedCycle?.endBalance && focusedCycle.endBalance < 0">
+            {{ focusedCycle ? formatCurrency(focusedCycle.endBalance) : '—' }}
           </span>
         </div>
         <div>
           <span class="label">Status do orçamento</span>
-          <span class="value" [class.negative]="focusedMonth && !focusedMonth.budgetConfigured">
+          <span class="value" [class.negative]="focusedCycle && !focusedCycle.budgetConfigured">
             {{ budgetStatusLabel }}
           </span>
         </div>
       </div>
       <div class="details-row">
         <div>
-          <span class="label">Entradas do mês</span>
+          <span class="label">Entradas da fatura</span>
           <span class="value">
-            {{ focusedMonth ? formatCurrency(focusedMonth.incomeTotal) : '—' }}
+            {{ focusedCycle ? formatCurrency(focusedCycle.incomeTotal) : '—' }}
           </span>
         </div>
         <div>
-          <span class="label">Saídas do mês</span>
+          <span class="label">Saídas da fatura</span>
           <span class="value negative">
-            {{ focusedMonth ? formatCurrency(focusedMonth.expensesTotal) : '—' }}
+            {{ focusedCycle ? formatCurrency(focusedCycle.expensesTotal) : '—' }}
           </span>
         </div>
       </div>
       <button
         class="ghost full"
         type="button"
-        *ngIf="focusedMonth"
-        (click)="openBudget.emit(focusedMonth)"
+        *ngIf="focusedCycle"
+        (click)="openBudget.emit(focusedCycle)"
       >
-        Ver orçamento do mês
+        Ver orçamento da fatura
       </button>
     </ng-template>
   </div>

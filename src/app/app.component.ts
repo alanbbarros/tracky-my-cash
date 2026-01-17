@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CalendarDay, CalendarMonth } from './models/calendar.model';
+import { BillingCycle, CalendarDay } from './models/calendar.model';
 import { BudgetCategory } from './models/budget.model';
 import { NewTransaction, Transaction } from './models/transaction.model';
 import { CalendarSectionComponent } from './components/calendar-section/calendar-section.component';
@@ -10,7 +10,7 @@ import { EntryModalComponent } from './components/entry-modal/entry-modal.compon
 import { MonthlyBudgetComponent } from './components/monthly-budget/monthly-budget.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { TransactionStoreService } from './services/transaction-store.service';
-import { buildCalendarMonths } from './utils/calendar.utils';
+import { buildBillingCycles } from './utils/calendar.utils';
 
 @Component({
   selector: 'app-root',
@@ -29,10 +29,10 @@ import { buildCalendarMonths } from './utils/calendar.utils';
 export class AppComponent {
   private readonly destroyRef = inject(DestroyRef);
 
-  months: CalendarMonth[] = [];
+  cycles: BillingCycle[] = [];
   selectedDay: CalendarDay | null = null;
-  focusedMonth: CalendarMonth | null = null;
-  activeBudgetMonth: CalendarMonth | null = null;
+  focusedCycle: BillingCycle | null = null;
+  activeBudgetCycle: BillingCycle | null = null;
   budgetCategories: BudgetCategory[] = [];
   isModalOpen = false;
 
@@ -55,45 +55,45 @@ export class AppComponent {
   onSelectDay(day: CalendarDay): void {
     if (this.selectedDay?.isoDate === day.isoDate) {
       this.selectedDay = null;
-      this.focusedMonth = this.findMonthForDay(day, this.months);
+      this.focusedCycle = this.findCycleForDay(day, this.cycles);
       return;
     }
 
     this.selectedDay = day;
-    this.focusedMonth = this.findMonthForDay(day, this.months);
+    this.focusedCycle = this.findCycleForDay(day, this.cycles);
   }
 
-  openBudget(month: CalendarMonth): void {
-    this.activeBudgetMonth = month;
-    this.budgetCategories = this.buildBudgetCategories(month);
+  openBudget(cycle: BillingCycle): void {
+    this.activeBudgetCycle = cycle;
+    this.budgetCategories = this.buildBudgetCategories(cycle);
   }
 
   closeBudget(): void {
-    this.activeBudgetMonth = null;
+    this.activeBudgetCycle = null;
   }
 
   get canNavigatePrevious(): boolean {
-    const index = this.findFocusedMonthIndex();
+    const index = this.findFocusedCycleIndex();
     return index > 0;
   }
 
   get canNavigateNext(): boolean {
-    const index = this.findFocusedMonthIndex();
-    return index > -1 && index < this.months.length - 1;
+    const index = this.findFocusedCycleIndex();
+    return index > -1 && index < this.cycles.length - 1;
   }
 
-  onPreviousMonth(): void {
-    const index = this.findFocusedMonthIndex();
+  onPreviousCycle(): void {
+    const index = this.findFocusedCycleIndex();
     if (index > 0) {
-      this.focusedMonth = this.months[index - 1];
+      this.focusedCycle = this.cycles[index - 1];
       this.selectedDay = null;
     }
   }
 
-  onNextMonth(): void {
-    const index = this.findFocusedMonthIndex();
-    if (index > -1 && index < this.months.length - 1) {
-      this.focusedMonth = this.months[index + 1];
+  onNextCycle(): void {
+    const index = this.findFocusedCycleIndex();
+    if (index > -1 && index < this.cycles.length - 1) {
+      this.focusedCycle = this.cycles[index + 1];
       this.selectedDay = null;
     }
   }
@@ -104,19 +104,19 @@ export class AppComponent {
   }
 
   private syncFromTransactions(transactions: Transaction[]): void {
-    this.months = buildCalendarMonths(20, transactions);
-    this.selectedDay = this.resolveSelectedDay(this.selectedDay, this.months);
-    this.focusedMonth = this.resolveFocusedMonth(this.focusedMonth, this.months, this.selectedDay);
-    if (this.activeBudgetMonth) {
-      this.activeBudgetMonth = this.resolveActiveBudgetMonth(this.activeBudgetMonth, this.months);
-      if (this.activeBudgetMonth) {
-        this.budgetCategories = this.buildBudgetCategories(this.activeBudgetMonth);
+    this.cycles = buildBillingCycles(20, transactions);
+    this.selectedDay = this.resolveSelectedDay(this.selectedDay, this.cycles);
+    this.focusedCycle = this.resolveFocusedCycle(this.focusedCycle, this.cycles, this.selectedDay);
+    if (this.activeBudgetCycle) {
+      this.activeBudgetCycle = this.resolveActiveBudgetCycle(this.activeBudgetCycle, this.cycles);
+      if (this.activeBudgetCycle) {
+        this.budgetCategories = this.buildBudgetCategories(this.activeBudgetCycle);
       }
     }
   }
 
-  private resolveSelectedDay(current: CalendarDay | null, months: CalendarMonth[]): CalendarDay | null {
-    if (!months.length) {
+  private resolveSelectedDay(current: CalendarDay | null, cycles: BillingCycle[]): CalendarDay | null {
+    if (!cycles.length) {
       return null;
     }
 
@@ -126,8 +126,8 @@ export class AppComponent {
 
     const targetIso = current?.isoDate;
     if (targetIso) {
-      for (const month of months) {
-        for (const cell of month.cells) {
+      for (const cycle of cycles) {
+        for (const cell of cycle.cells) {
           if (cell.day?.isoDate === targetIso) {
             return cell.day;
           }
@@ -138,50 +138,48 @@ export class AppComponent {
     return null;
   }
 
-  private resolveFocusedMonth(
-    current: CalendarMonth | null,
-    months: CalendarMonth[],
+  private resolveFocusedCycle(
+    current: BillingCycle | null,
+    cycles: BillingCycle[],
     selectedDay: CalendarDay | null
-  ): CalendarMonth | null {
-    if (!months.length) {
+  ): BillingCycle | null {
+    if (!cycles.length) {
       return null;
     }
 
     if (selectedDay) {
-      return this.findMonthForDay(selectedDay, months);
+      return this.findCycleForDay(selectedDay, cycles);
     }
 
     if (current) {
-      return months.find((month) => month.monthIndex === current.monthIndex && month.year === current.year) ?? months[0];
+      return cycles.find((cycle) => cycle.id === current.id) ?? cycles[0];
     }
 
-    return months[0];
+    return cycles[0];
   }
 
-  private resolveActiveBudgetMonth(current: CalendarMonth, months: CalendarMonth[]): CalendarMonth | null {
-    return months.find((month) => month.monthIndex === current.monthIndex && month.year === current.year) ?? null;
+  private resolveActiveBudgetCycle(current: BillingCycle, cycles: BillingCycle[]): BillingCycle | null {
+    return cycles.find((cycle) => cycle.id === current.id) ?? null;
   }
 
-  private findFocusedMonthIndex(): number {
-    if (!this.focusedMonth) {
+  private findFocusedCycleIndex(): number {
+    if (!this.focusedCycle) {
       return -1;
     }
 
-    return this.months.findIndex(
-      (month) => month.monthIndex === this.focusedMonth?.monthIndex && month.year === this.focusedMonth?.year
-    );
+    return this.cycles.findIndex((cycle) => cycle.id === this.focusedCycle?.id);
   }
 
-  private findMonthForDay(day: CalendarDay, months: CalendarMonth[]): CalendarMonth | null {
+  private findCycleForDay(day: CalendarDay, cycles: BillingCycle[]): BillingCycle | null {
     return (
-      months.find((month) =>
-        month.cells.some((cell) => cell.day?.isoDate === day.isoDate)
+      cycles.find((cycle) =>
+        cycle.cells.some((cell) => cell.day?.isoDate === day.isoDate && cell.isInCycle)
       ) ?? null
     );
   }
 
-  private buildBudgetCategories(month: CalendarMonth): BudgetCategory[] {
-    const variation = (month.monthIndex % 3) * 75;
+  private buildBudgetCategories(cycle: BillingCycle): BudgetCategory[] {
+    const variation = (cycle.cycleStart.getMonth() % 3) * 75;
     return [
       { name: 'Moradia', planned: 1850, committed: 1850 },
       { name: 'Alimentação', planned: 900 + variation, committed: 420 + variation / 2 },

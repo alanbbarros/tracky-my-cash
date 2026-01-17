@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BudgetCategory } from '../../models/budget.model';
-import { CalendarMonth } from '../../models/calendar.model';
+import { BillingCycle } from '../../models/calendar.model';
 import { CurrencyFormatService } from '../../services/currency-format.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { CurrencyFormatService } from '../../services/currency-format.service';
   styleUrl: './monthly-budget.component.scss'
 })
 export class MonthlyBudgetComponent {
-  @Input({ required: true }) month!: CalendarMonth;
+  @Input({ required: true }) cycle!: BillingCycle;
   @Input() categories: BudgetCategory[] = [];
   @Output() closeBudget = new EventEmitter<void>();
 

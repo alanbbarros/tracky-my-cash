@@ -1,6 +1,7 @@
 <div
   class="day"
   [class.placeholder]="cell.isPlaceholder"
+  [class.inactive]="!cell.isInCycle"
   [class.today]="cell.day?.isToday"
   [class.selected]="isSelected"
   (click)="onSelect($event)"
@@ -15,7 +16,7 @@
         +{{ cell.day.expenseCount }}
       </span>
     </div>
-    <span class="day-balance" [class.negative]="cell.day.balance < 0">
+    <span class="day-balance" *ngIf="cell.isInCycle" [class.negative]="cell.day.balance < 0">
       {{ formatCurrency(cell.day.balance) }}
     </span>
   </ng-container>

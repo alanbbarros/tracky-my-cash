@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CalendarDay, CalendarMonth } from '../../models/calendar.model';
+import { BillingCycle, CalendarDay } from '../../models/calendar.model';
 import { CurrencyFormatService } from '../../services/currency-format.service';
 
 @Component({
@@ -12,16 +12,14 @@ import { CurrencyFormatService } from '../../services/currency-format.service';
 })
 export class DetailsPanelComponent {
   @Input() selectedDay: CalendarDay | null = null;
-  @Input() focusedMonth: CalendarMonth | null = null;
-  @Output() openBudget = new EventEmitter<CalendarMonth>();
+  @Input() focusedCycle: BillingCycle | null = null;
+  @Output() openBudget = new EventEmitter<BillingCycle>();
 
   constructor(private readonly currencyFormat: CurrencyFormatService) {}
 
   get selectedDayTitle(): string {
     if (!this.selectedDay) {
-      return this.focusedMonth
-        ? `Resumo de ${this.focusedMonth.label} ${this.focusedMonth.year}`
-        : 'Selecione um mês no calendário';
+      return this.focusedCycle ? `Resumo da ${this.focusedCycle.label}` : 'Selecione uma fatura no calendário';
     }
 
     return this.selectedDay.date.toLocaleDateString('pt-BR', {
@@ -33,11 +31,11 @@ export class DetailsPanelComponent {
   }
 
   get budgetStatusLabel(): string {
-    if (!this.focusedMonth) {
-      return 'Orçamento não selecionado';
+    if (!this.focusedCycle) {
+      return 'Orçamento da fatura não selecionado';
     }
 
-    return this.focusedMonth.budgetConfigured ? 'Orçamento configurado' : 'Orçamento não configurado';
+    return this.focusedCycle.budgetConfigured ? 'Orçamento da fatura configurado' : 'Orçamento da fatura não configurado';
   }
 
   formatCurrency(value: number): string {

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CalendarDay, CalendarMonth } from '../../models/calendar.model';
+import { BillingCycle, CalendarDay } from '../../models/calendar.model';
 import { DayCellComponent } from '../day-cell/day-cell.component';
 
 @Component({
@@ -11,7 +11,7 @@ import { DayCellComponent } from '../day-cell/day-cell.component';
   styleUrl: './month-card.component.scss'
 })
 export class MonthCardComponent {
-  @Input({ required: true }) month!: CalendarMonth;
+  @Input({ required: true }) cycle!: BillingCycle;
   @Input() selectedDay: CalendarDay | null = null;
   @Output() daySelect = new EventEmitter<CalendarDay>();
 }

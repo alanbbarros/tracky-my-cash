@@ -23,8 +23,20 @@
 }
 
 .month-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   font-weight: 600;
   text-transform: capitalize;
+  line-height: 1.2;
+}
+
+.month-label .subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: none;
 }
 
 @media (max-width: 720px) {

@@ -19,7 +19,7 @@ export class DayCellComponent {
 
   onSelect(event: MouseEvent): void {
     event.stopPropagation();
-    if (this.cell.day) {
+    if (this.cell.day && this.cell.isInCycle) {
       this.daySelect.emit(this.cell.day);
     }
   }

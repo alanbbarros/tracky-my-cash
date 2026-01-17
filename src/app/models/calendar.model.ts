@@ -15,12 +15,17 @@ export interface CalendarDay {
 export interface CalendarCell {
   day?: CalendarDay;
   isPlaceholder: boolean;
+  isInCycle: boolean;
 }
 
-export interface CalendarMonth {
+export interface BillingCycle {
+  id: string;
   label: string;
-  year: number;
-  monthIndex: number;
+  cycleStart: Date;
+  cycleEnd: Date;
+  dueDate: Date;
+  cycleRangeLabel: string;
+  dueDateLabel: string;
   startBalance: number;
   endBalance: number;
   incomeTotal: number;

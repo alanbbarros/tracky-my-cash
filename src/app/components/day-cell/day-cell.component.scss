@@ -28,6 +28,15 @@
     box-shadow: 0 12px 24px rgba(79, 70, 229, 0.2);
   }
 
+  &.inactive {
+    opacity: 0.45;
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    box-shadow: none;
+    cursor: default;
+    pointer-events: none;
+  }
+
   &.placeholder {
     background: transparent;
     border-color: transparent;

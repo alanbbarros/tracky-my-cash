@@ -1,31 +1,31 @@
-<section class="month-summary" *ngIf="month">
+<section class="month-summary" *ngIf="cycle">
   <header class="summary-header">
     <div>
-      <p class="eyebrow">Resumo do mês em foco</p>
-      <h2>Resumo de {{ month.label }} {{ month.year }}</h2>
-      <p class="muted">Saldo projetado e status do orçamento dentro do mês selecionado.</p>
+      <p class="eyebrow">Resumo da fatura em foco</p>
+      <h2>{{ cycle.label }}</h2>
+      <p class="muted">Saldo projetado e status do orçamento dentro do ciclo selecionado.</p>
     </div>
-    <button class="primary" type="button" (click)="openBudget.emit(month)">
-      Ver orçamento do mês
+    <button class="primary" type="button" (click)="openBudget.emit(cycle)">
+      Ver orçamento da fatura
     </button>
   </header>
   <div class="summary-grid">
     <div class="summary-item">
-      <span class="label">Saldo no início do mês</span>
-      <strong [class.negative]="month.startBalance < 0">
-        {{ formatCurrency(month.startBalance) }}
+      <span class="label">Saldo no início da fatura</span>
+      <strong [class.negative]="cycle.startBalance < 0">
+        {{ formatCurrency(cycle.startBalance) }}
       </strong>
     </div>
     <div class="summary-item">
       <span class="label">Saldo final estimado</span>
-      <strong [class.negative]="month.endBalance < 0">
-        {{ formatCurrency(month.endBalance) }}
+      <strong [class.negative]="cycle.endBalance < 0">
+        {{ formatCurrency(cycle.endBalance) }}
       </strong>
     </div>
     <div class="summary-item">
       <span class="label">Status do orçamento</span>
-      <strong [class.positive]="month.budgetConfigured" [class.negative]="!month.budgetConfigured">
-        {{ month.budgetConfigured ? 'Configurado' : 'Não configurado' }}
+      <strong [class.positive]="cycle.budgetConfigured" [class.negative]="!cycle.budgetConfigured">
+        {{ cycle.budgetConfigured ? 'Configurado' : 'Não configurado' }}
       </strong>
     </div>
   </div>
