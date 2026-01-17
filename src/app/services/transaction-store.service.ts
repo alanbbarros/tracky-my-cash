@@ -61,7 +61,12 @@ export class TransactionStoreService {
   }
 
   private loadFromStorage(): Transaction[] {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const storage = this.getStorage();
+    if (!storage) {
+      return [];
+    }
+
+    const raw = storage.getItem(STORAGE_KEY);
     if (!raw) {
       return [];
     }
@@ -89,6 +94,21 @@ export class TransactionStoreService {
   }
 
   private saveToStorage(transactions: Transaction[]): void {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+    const storage = this.getStorage();
+    if (!storage) {
+      return;
+    }
+    storage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+  }
+
+  private getStorage(): Storage | null {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    try {
+      return window.localStorage;
+    } catch {
+      return null;
+    }
   }
 }

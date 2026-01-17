@@ -19,6 +19,7 @@ export class TransactionsListComponent implements OnChanges {
   @Output() filtersChange = new EventEmitter<TransactionFilters>();
   @Output() editTransaction = new EventEmitter<Transaction>();
   @Output() deleteTransaction = new EventEmitter<Transaction>();
+  @Output() openNewEntry = new EventEmitter<void>();
 
   form: TransactionFilters = {};
 

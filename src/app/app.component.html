@@ -44,7 +44,6 @@
         (editTransaction)="onEditTransaction($event)"
         (deleteTransaction)="onDeleteTransaction($event)"
         (openTransactions)="openTransactions($event)"
-        (openNewEntry)="openModal()"
       ></app-details-panel>
     </main>
 
@@ -65,6 +64,7 @@
       (filtersChange)="transactionFilters = $event"
       (editTransaction)="onEditTransaction($event)"
       (deleteTransaction)="onDeleteTransaction($event)"
+      (openNewEntry)="openModal()"
     ></app-transactions-list>
 
     <app-invoice-detail

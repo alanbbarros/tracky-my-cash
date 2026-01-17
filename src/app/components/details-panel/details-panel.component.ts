@@ -17,7 +17,6 @@ export class DetailsPanelComponent {
   @Output() editTransaction = new EventEmitter<Transaction>();
   @Output() deleteTransaction = new EventEmitter<Transaction>();
   @Output() openTransactions = new EventEmitter<TransactionFilters>();
-  @Output() openNewEntry = new EventEmitter<void>();
 
   constructor(private readonly currencyFormat: CurrencyFormatService) {}
 

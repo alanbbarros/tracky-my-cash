@@ -3,14 +3,15 @@
 }
 
 :root {
-  --color-bg: #e7ecf4;
-  --color-surface: #f1f4fa;
+  /* Design system palette */
+  --color-bg: #f5f6f8;
+  --color-surface: #eef1f4;
   --color-card: #ffffff;
-  --color-border: #d6dee9;
-  --color-muted: #64748b;
-  --color-text: #0f172a;
-  --color-primary: #4338ca;
-  --color-primary-soft: rgba(67, 56, 202, 0.12);
+  --color-border: #d5dae1;
+  --color-muted: #6b7280;
+  --color-text: #111827;
+  --color-primary: #4b5563;
+  --color-primary-soft: rgba(75, 85, 99, 0.14);
   --color-danger: #dc2626;
 }
 
@@ -19,6 +20,7 @@ body {
   background: var(--color-bg);
   font-family: 'Inter', system-ui, sans-serif;
   color: var(--color-text);
+  text-rendering: optimizeLegibility;
 }
 
 button {
