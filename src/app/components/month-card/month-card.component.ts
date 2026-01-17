@@ -14,6 +14,4 @@ export class MonthCardComponent {
   @Input({ required: true }) month!: CalendarMonth;
   @Input() selectedDay: CalendarDay | null = null;
   @Output() daySelect = new EventEmitter<CalendarDay>();
-  @Output() monthFocus = new EventEmitter<CalendarMonth>();
-  @Output() openBudget = new EventEmitter<CalendarMonth>();
 }

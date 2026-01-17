@@ -7,7 +7,6 @@ import { NewTransaction, Transaction } from './models/transaction.model';
 import { CalendarSectionComponent } from './components/calendar-section/calendar-section.component';
 import { DetailsPanelComponent } from './components/details-panel/details-panel.component';
 import { EntryModalComponent } from './components/entry-modal/entry-modal.component';
-import { MonthSummaryComponent } from './components/month-summary/month-summary.component';
 import { MonthlyBudgetComponent } from './components/monthly-budget/monthly-budget.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { TransactionStoreService } from './services/transaction-store.service';
@@ -19,7 +18,6 @@ import { buildCalendarMonths } from './utils/calendar.utils';
   imports: [
     CommonModule,
     TopBarComponent,
-    MonthSummaryComponent,
     CalendarSectionComponent,
     DetailsPanelComponent,
     EntryModalComponent,
@@ -65,11 +63,6 @@ export class AppComponent {
     this.focusedMonth = this.findMonthForDay(day, this.months);
   }
 
-  onFocusMonth(month: CalendarMonth): void {
-    this.focusedMonth = month;
-    this.selectedDay = null;
-  }
-
   openBudget(month: CalendarMonth): void {
     this.activeBudgetMonth = month;
     this.budgetCategories = this.buildBudgetCategories(month);
@@ -77,6 +70,32 @@ export class AppComponent {
 
   closeBudget(): void {
     this.activeBudgetMonth = null;
+  }
+
+  get canNavigatePrevious(): boolean {
+    const index = this.findFocusedMonthIndex();
+    return index > 0;
+  }
+
+  get canNavigateNext(): boolean {
+    const index = this.findFocusedMonthIndex();
+    return index > -1 && index < this.months.length - 1;
+  }
+
+  onPreviousMonth(): void {
+    const index = this.findFocusedMonthIndex();
+    if (index > 0) {
+      this.focusedMonth = this.months[index - 1];
+      this.selectedDay = null;
+    }
+  }
+
+  onNextMonth(): void {
+    const index = this.findFocusedMonthIndex();
+    if (index > -1 && index < this.months.length - 1) {
+      this.focusedMonth = this.months[index + 1];
+      this.selectedDay = null;
+    }
   }
 
   onSaveEntry(entry: NewTransaction): void {
@@ -141,6 +160,16 @@ export class AppComponent {
 
   private resolveActiveBudgetMonth(current: CalendarMonth, months: CalendarMonth[]): CalendarMonth | null {
     return months.find((month) => month.monthIndex === current.monthIndex && month.year === current.year) ?? null;
+  }
+
+  private findFocusedMonthIndex(): number {
+    if (!this.focusedMonth) {
+      return -1;
+    }
+
+    return this.months.findIndex(
+      (month) => month.monthIndex === this.focusedMonth?.monthIndex && month.year === this.focusedMonth?.year
+    );
   }
 
   private findMonthForDay(day: CalendarDay, months: CalendarMonth[]): CalendarMonth | null {
