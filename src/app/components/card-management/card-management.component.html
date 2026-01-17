@@ -5,9 +5,7 @@
       <h2>Cartões de crédito</h2>
       <p class="muted">Cadastre e acompanhe limites, fechamento e vencimento.</p>
     </div>
-    <button class="ghost" type="button" (click)="resetForm()" *ngIf="editingCardId">
-      Cancelar edição
-    </button>
+    <button class="primary" type="button" (click)="openNewCard()">Novo cartão</button>
   </header>
 
   <div class="cards-grid">
@@ -65,30 +63,42 @@
     </article>
   </div>
 
-  <form class="card-form" (ngSubmit)="submitForm()">
-    <h3>{{ editingCardId ? 'Editar cartão' : 'Novo cartão' }}</h3>
-    <div class="form-grid">
-      <label>
-        Nome do cartão
-        <input type="text" [(ngModel)]="form.name" name="name" placeholder="Ex: Cartão principal" />
-      </label>
-      <label>
-        Limite
-        <input type="number" min="0" [(ngModel)]="form.limit" name="limit" placeholder="R$ 0,00" />
-      </label>
-      <label>
-        Dia de fechamento
-        <input type="number" min="1" max="31" [(ngModel)]="form.closingDay" name="closingDay" />
-      </label>
-      <label>
-        Dia de vencimento
-        <input type="number" min="1" max="31" [(ngModel)]="form.dueDay" name="dueDay" />
-      </label>
+  <div class="modal-backdrop" *ngIf="isModalOpen">
+    <div class="modal">
+      <header class="modal-header">
+        <div>
+          <h2>{{ editingCardId ? 'Editar cartão' : 'Novo cartão' }}</h2>
+          <p class="muted">Atualize nome, limite e datas do cartão.</p>
+        </div>
+        <button class="icon-button" type="button" (click)="resetForm()">×</button>
+      </header>
+
+      <form class="modal-form" (ngSubmit)="submitForm()">
+        <div class="form-grid">
+          <label>
+            Nome do cartão
+            <input type="text" [(ngModel)]="form.name" name="name" placeholder="Ex: Cartão principal" />
+          </label>
+          <label>
+            Limite
+            <input type="number" min="0" [(ngModel)]="form.limit" name="limit" placeholder="R$ 0,00" />
+          </label>
+          <label>
+            Dia de fechamento
+            <input type="number" min="1" max="31" [(ngModel)]="form.closingDay" name="closingDay" />
+          </label>
+          <label>
+            Dia de vencimento
+            <input type="number" min="1" max="31" [(ngModel)]="form.dueDay" name="dueDay" />
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button class="ghost" type="button" (click)="resetForm()">Cancelar</button>
+          <button class="primary" type="submit">
+            {{ editingCardId ? 'Salvar alterações' : 'Cadastrar cartão' }}
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="form-actions">
-      <button class="primary" type="submit">
-        {{ editingCardId ? 'Salvar alterações' : 'Cadastrar cartão' }}
-      </button>
-    </div>
-  </form>
+  </div>
 </section>

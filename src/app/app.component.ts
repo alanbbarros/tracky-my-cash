@@ -12,6 +12,7 @@ import { CardManagementComponent } from './components/card-management/card-manag
 import { InvoiceDetailComponent } from './components/invoice-detail/invoice-detail.component';
 import { TransactionsListComponent } from './components/transactions-list/transactions-list.component';
 import { CardStoreService } from './services/card-store.service';
+import { NotificationService } from './services/notification.service';
 import { TransactionStoreService } from './services/transaction-store.service';
 import { buildBillingCycles, formatIsoDate } from './utils/calendar.utils';
 
@@ -48,10 +49,12 @@ export class AppComponent {
   recurrenceEditTarget: Transaction | null = null;
   recurrenceEditScope: 'single' | 'next' | 'all' = 'single';
   transactionFilters: TransactionFilters = {};
+  readonly notifications$ = this.notificationService.notifications$;
 
   constructor(
     private readonly transactionStore: TransactionStoreService,
-    private readonly cardStore: CardStoreService
+    private readonly cardStore: CardStoreService,
+    public readonly notificationService: NotificationService
   ) {
     this.cards = this.cardStore.getSnapshot();
     this.activeCard = this.cards[0] ?? null;
@@ -148,25 +151,36 @@ export class AppComponent {
   }
 
   onSaveEntry(entry: NewTransaction): void {
-    this.transactionStore.addTransaction(entry);
-    this.closeModal();
+    const saved = this.transactionStore.addTransaction(entry);
+    if (saved) {
+      this.notificationService.notify('success', 'Lançamento criado com sucesso.');
+      this.closeModal();
+    } else {
+      this.notificationService.notify('warning', 'Não foi possível salvar o lançamento. Verifique seu navegador.');
+    }
   }
 
   onUpdateEntry(entry: NewTransaction): void {
     if (!this.editingTransaction) {
+      this.notificationService.notify('warning', 'Nenhum lançamento selecionado para edição.');
       return;
     }
 
     const target = this.editingTransaction;
     if (this.recurrenceEditScope === 'single' || !target.recurrenceGroupId) {
-      this.transactionStore.updateTransaction(target.id, entry);
-      this.closeModal();
+      const saved = this.transactionStore.updateTransaction(target.id, entry);
+      if (saved) {
+        this.notificationService.notify('success', 'Lançamento atualizado com sucesso.');
+        this.closeModal();
+      } else {
+        this.notificationService.notify('warning', 'Não foi possível atualizar o lançamento.');
+      }
       return;
     }
 
     const groupId = target.recurrenceGroupId;
     const anchorDate = target.date;
-    this.transactionStore.updateTransactions((transactions) =>
+    const saved = this.transactionStore.updateTransactions((transactions) =>
       transactions.map((transaction) => {
         if (transaction.recurrenceGroupId !== groupId) {
           return transaction;
@@ -182,11 +196,21 @@ export class AppComponent {
         };
       })
     );
-    this.closeModal();
+    if (saved) {
+      this.notificationService.notify('success', 'Lançamentos atualizados com sucesso.');
+      this.closeModal();
+    } else {
+      this.notificationService.notify('warning', 'Não foi possível atualizar os lançamentos.');
+    }
   }
 
   onDeleteTransaction(transaction: Transaction): void {
-    this.transactionStore.deleteTransaction(transaction.id);
+    const saved = this.transactionStore.deleteTransaction(transaction.id);
+    if (saved) {
+      this.notificationService.notify('info', 'Lançamento removido.');
+    } else {
+      this.notificationService.notify('warning', 'Não foi possível remover o lançamento.');
+    }
   }
 
   onEditTransaction(transaction: Transaction): void {
@@ -215,11 +239,13 @@ export class AppComponent {
   onSelectCard(card: CreditCard): void {
     this.activeCard = card;
     this.syncFromData();
+    this.notificationService.notify('info', `Cartão ativo: ${card.name}.`);
   }
 
   onSaveCard(card: CreditCard, isEdit: boolean): void {
     if (isEdit) {
       this.cardStore.updateCard(card);
+      this.notificationService.notify('success', 'Cartão atualizado com sucesso.');
       return;
     }
     const created = this.cardStore.addCard({
@@ -229,6 +255,7 @@ export class AppComponent {
       dueDay: card.dueDay
     });
     this.activeCard = created;
+    this.notificationService.notify('success', 'Cartão cadastrado com sucesso.');
   }
 
   onMarkInvoiceAsPaid(cycle: BillingCycle): void {
@@ -242,6 +269,7 @@ export class AppComponent {
     const invoiceId = this.getInvoiceId(cycle);
     const hasPayment = this.transactions.some((transaction) => transaction.invoiceId === invoiceId);
     if (hasPayment) {
+      this.notificationService.notify('info', 'A fatura já está marcada como paga.');
       return;
     }
     const paymentTransaction: NewTransaction = {
@@ -255,7 +283,12 @@ export class AppComponent {
       cardId: this.activeCard.id,
       invoiceId
     };
-    this.transactionStore.addTransaction(paymentTransaction);
+    const saved = this.transactionStore.addTransaction(paymentTransaction);
+    if (saved) {
+      this.notificationService.notify('success', 'Pagamento da fatura registrado.');
+    } else {
+      this.notificationService.notify('warning', 'Não foi possível registrar o pagamento da fatura.');
+    }
   }
 
   get invoiceStatus(): 'aberta' | 'fechada' | 'paga' {

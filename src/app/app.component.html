@@ -10,6 +10,13 @@
     (openView)="openView($event)"
   ></app-top-bar>
 
+  <div class="toast-stack" *ngIf="notifications$ | async as notifications">
+    <div class="toast" *ngFor="let notification of notifications" [ngClass]="notification.type">
+      <span>{{ notification.message }}</span>
+      <button type="button" class="icon-button" (click)="notificationService.dismiss(notification.id)">×</button>
+    </div>
+  </div>
+
   <ng-container [ngSwitch]="activeView">
     <main class="content" *ngSwitchCase="'calendar'">
       <section class="calendar-column">
